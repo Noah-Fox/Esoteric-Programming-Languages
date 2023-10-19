@@ -78,7 +78,7 @@ int main(int argc, char const *argv[]){
     bool halt = false;
     while (!halt){
         halt = true;
-        for (auto it = fractions.begin(); it != fractions.end(); it ++){
+        for (vector<Fraction>::iterator it = fractions.begin(); it != fractions.end(); it ++){
             if (makesInteger(n,*it)){
                 multiplyToInteger(n,*it);
                 if (debugOutput){

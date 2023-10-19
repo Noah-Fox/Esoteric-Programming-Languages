@@ -77,7 +77,7 @@ string primeFactorization(ll a){
 string primeFactorization(map<ll,ll> a){
     string result = "";
     bool appended = false;
-    for (auto it = a.begin(); it != a.end(); it ++){
+    for (map<ll,ll>::iterator it = a.begin(); it != a.end(); it ++){
         if (it -> second){
             if (appended){
                 result += ",";
@@ -274,8 +274,8 @@ bool interpretCode(string fileName, map<ll,ll>& n, vector<Fraction>& fractions, 
     return true;
 }
 
-bool makesInteger(map<ll,ll>& n, const Fraction& f){
-    for (auto it = f.den.begin(); it != f.den.end(); it ++){
+bool makesInteger(map<ll,ll>& n, Fraction& f){
+    for (vector<PrimePow>::iterator it = f.den.begin(); it != f.den.end(); it ++){
         if (n.count(it -> base) == 0 || n[it -> base] < (it -> power)){
             return false;
         }
@@ -283,11 +283,11 @@ bool makesInteger(map<ll,ll>& n, const Fraction& f){
     return true;
 }
 
-void multiplyToInteger(map<ll,ll>& n, const Fraction& f){
-    for (auto it = f.den.begin(); it != f.den.end(); it ++){
+void multiplyToInteger(map<ll,ll>& n, Fraction& f){
+    for (vector<PrimePow>::iterator it = f.den.begin(); it != f.den.end(); it ++){
         n[it -> base] -= (it -> power);
     }
-    for (auto it = f.num.begin(); it != f.num.end(); it ++){
+    for (vector<PrimePow>::iterator it = f.num.begin(); it != f.num.end(); it ++){
         if (n.count(it -> base)){
             n[it -> base] += (it -> power);
         }
