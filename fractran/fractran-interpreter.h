@@ -5,16 +5,53 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <map>
 
 using namespace std;
 
 typedef unsigned long long ll;
 
-struct Fraction{
-    ll num;
-    ll den;
+struct PrimePow{
+    ll base;
+    ll power;
 
-    Fraction(ll a, ll b){num = a; den = b;}
+    PrimePow(ll b, ll p){base = b; power = p;}
+};
+
+struct Fraction{
+    vector<PrimePow> num;
+    vector<PrimePow> den;
+    ll numVal;
+    ll denVal;
+
+    Fraction(ll a, ll b){
+        numVal = a;
+        denVal = b;
+
+        //convert a to prime factorization, put into num
+        for (ll i = 2; i <= a; i ++){
+            ll count = 0;
+            while (a % i == 0){
+                count ++;
+                a /= i;
+            }
+            if (count){
+                num.push_back(PrimePow(i,count));
+            }
+        }
+
+        //convert b to prime factorization, put into den
+        for (ll i = 2; i <= b; i ++){
+            ll count = 0;
+            while (b % i == 0){
+                count ++;
+                b /= i;
+            }
+            if (count){
+                den.push_back(PrimePow(i,count));
+            }
+        }
+    }
 };
 
 string primeFactorization(ll a){
@@ -32,6 +69,21 @@ string primeFactorization(ll a){
             result += "^";
             result += to_string(count);
             appended = true;
+        }
+    }
+    return result;
+}
+
+string primeFactorization(map<ll,ll> a){
+    string result = "";
+    bool appended = false;
+    for (auto it = a.begin(); it != a.end(); it ++){
+        if (it -> second){
+            if (appended){
+                result += ",";
+            }
+            appended = true;
+            result += to_string(it -> first) + "^" + to_string(it -> second);
         }
     }
     return result;
@@ -63,7 +115,7 @@ void parseSpaceWithComments(istream& in){
     }
 }
 
-bool interpretRaw(string fileName, ll& n, vector<Fraction>& fractions){
+bool interpretRaw(string fileName, map<ll,ll>& n, vector<Fraction>& fractions){
     ifstream inFile;
     inFile.open(fileName);
     if (inFile.fail()){
@@ -71,7 +123,19 @@ bool interpretRaw(string fileName, ll& n, vector<Fraction>& fractions){
         return 0;
     }
 
-    inFile >> n;
+    ll nVal;
+    inFile >> nVal;
+    //set n to prime factorization of nVal
+    for (ll i = 2; i <= nVal; i ++){
+        ll count = 0;
+        while (nVal % i == 0){
+            count ++;
+            nVal /= i;
+        }
+        if (count){
+            n[i] = count;
+        }
+    }
 
     while (!inFile.eof()){
         string f;
@@ -95,7 +159,7 @@ bool interpretRaw(string fileName, ll& n, vector<Fraction>& fractions){
     return true;
 }
 
-bool interpretCode(string fileName, ll& n, vector<Fraction>& fractions, bool debugOutput){
+bool interpretCode(string fileName, map<ll,ll>& n, vector<Fraction>& fractions, bool debugOutput){
     ifstream inFile;
     inFile.open(fileName);
     if (inFile.fail()){
@@ -108,12 +172,23 @@ bool interpretCode(string fileName, ll& n, vector<Fraction>& fractions, bool deb
     //interpret input value
     if (isdigit(inFile.peek())){
         //n is a given value
-        inFile >> n;
+        ll nVal;
+        inFile >> nVal;
+        //set n to prime factorization of nVal
+        for (ll i = 2; i <= nVal; i ++){
+            ll count = 0;
+            while (nVal % i == 0){
+                count ++;
+                nVal /= i;
+            }
+            if (count){
+                n[i] = count;
+            }
+        }
     }
     //n uses inputs
     else if (inFile.peek() == '{'){
         inFile.ignore();
-        n = 1;
 
         ll base, power;
 
@@ -154,7 +229,7 @@ bool interpretCode(string fileName, ll& n, vector<Fraction>& fractions, bool deb
                     return 0;
                 }
 
-                n *= pow(base,power);
+                n[base] = power;
             }
             else {
                 cout << "ERROR: expected number or end of input\n";
@@ -197,6 +272,29 @@ bool interpretCode(string fileName, ll& n, vector<Fraction>& fractions, bool deb
     inFile.close();
 
     return true;
+}
+
+bool makesInteger(map<ll,ll>& n, const Fraction& f){
+    for (auto it = f.den.begin(); it != f.den.end(); it ++){
+        if (n.count(it -> base) == 0 || n[it -> base] < (it -> power)){
+            return false;
+        }
+    }
+    return true;
+}
+
+void multiplyToInteger(map<ll,ll>& n, const Fraction& f){
+    for (auto it = f.den.begin(); it != f.den.end(); it ++){
+        n[it -> base] -= (it -> power);
+    }
+    for (auto it = f.num.begin(); it != f.num.end(); it ++){
+        if (n.count(it -> base)){
+            n[it -> base] += (it -> power);
+        }
+        else {
+            n[it -> base] = (it -> power);
+        }
+    }
 }
 
 #endif 

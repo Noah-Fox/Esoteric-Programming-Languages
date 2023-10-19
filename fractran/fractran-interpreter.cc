@@ -7,6 +7,9 @@
                             stop pauses, Enter "f" to stop pauses and stop outputs until program halts
 */
 
+//NOTE: all numbers in code must currently fit inside an unsigned long long. Numbers generated in code can be as big as any 
+// number whose prime factorization is represented by unsigned long longs.
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -19,7 +22,7 @@ typedef unsigned long long ll;
 
 int main(int argc, char const *argv[]){
 
-    ll n;
+    map<ll,ll> n;
     vector<Fraction> fractions;
 
     if (argc == 1){
@@ -76,10 +79,10 @@ int main(int argc, char const *argv[]){
     while (!halt){
         halt = true;
         for (auto it = fractions.begin(); it != fractions.end(); it ++){
-            if (n % (it -> den) == 0){
-                n = n * (it -> num) / (it -> den);
+            if (makesInteger(n,*it)){
+                multiplyToInteger(n,*it);
                 if (debugOutput){
-                    cout << (it -> num) << "/" << (it -> den) << ": " << n << " " << primeFactorization(n) << "\t";
+                    cout << (it -> numVal) << "/" << (it -> denVal) << ": " << " " << primeFactorization(n) << "\t";
                     if (pauseWithDebug){
                         string debugInput;
                         cin >> debugInput;
@@ -100,7 +103,7 @@ int main(int argc, char const *argv[]){
         }
     }
 
-    cout << n << ": " << primeFactorization(n) << "\n";
+    cout << primeFactorization(n) << "\n";
 
     return 0;
 }
