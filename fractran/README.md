@@ -78,6 +78,38 @@ One important topic you need to understand in order to write in FRACTRAN is stat
 ```
 This program initializes `n` as 2^a * 3^b, and outputs 3^(a + b). You can easily see how this is done, looking at it as a set of variables v2 and v3. In every step, v2 is decreased and v3 is increased, until v2 is zero. This is arguably the simplest possible useful FRACTRAN code. As in normal computation, multiplication is only a looping of this process. However, a loop cannot be explicitly performed, the same cases must be considered in every step of the program. You therefore have to introduce states, so that the progress of the program can be preserved.
 
+```
+    state = A
+    while (true){
+        while (state = A){
+            if (v7 > 0){
+                v7 --, v3 ++
+                state = A
+            }
+            else if (v7 = 0 && v2 > 0){
+                v2 --
+                state = B
+            }
+            else if (v7 = 0 && v2 = 0 && v3 > 0){
+                v3 --
+                state = A
+            }
+            else if (v7 = 0 && v2 = 0 && v3 = 0){
+                return;
+            }
+        }
+        while (state = B){
+            if (v3 > 0){
+                v3 --, v5 ++, v7 ++
+                state = B
+            }
+            else if (v3 = 0){
+                state = A
+            }
+        }
+    }
+```
+
 | Current State | Condition | Action | Next State |
 | ----------- | ----------- | ----------- | ----------- |
 | A | v7 > 0 | v7--, v3++ | A |
