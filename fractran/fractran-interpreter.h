@@ -11,6 +11,10 @@ using namespace std;
 
 typedef unsigned long long ll;
 
+
+/**
+ * Represents a number to a power
+*/
 struct PrimePow{
     ll base;
     ll power;
@@ -18,6 +22,10 @@ struct PrimePow{
     PrimePow(ll b, ll p){base = b; power = p;}
 };
 
+/**
+ * Represents a fraction. Stores the numerator and denominator as num and den in their prime factorizations, using
+ * vectors of PrimePow objects
+*/
 struct Fraction{
     vector<PrimePow> num;
     vector<PrimePow> den;
@@ -54,6 +62,9 @@ struct Fraction{
     }
 };
 
+/**
+ * Output a string of the prime factorization of a number
+*/
 string primeFactorization(ll a){
     string result = "";
     bool appended = false;
@@ -74,6 +85,9 @@ string primeFactorization(ll a){
     return result;
 }
 
+/**
+ * Output a string of the prime factorization represented by a map of base->power
+*/
 string primeFactorization(map<ll,ll> a){
     string result = "";
     bool appended = false;
@@ -99,6 +113,7 @@ ll extractInt(istream& in){
     return result;
 }
 
+//go through istream ignoring whitespaces and comments
 void parseSpaceWithComments(istream& in){
     while (!in.eof()){
         if (isspace(in.peek())){
@@ -115,6 +130,8 @@ void parseSpaceWithComments(istream& in){
     }
 }
 
+//interpret raw FRACTRAN code
+//return false if the code fails
 bool interpretRaw(string fileName, map<ll,ll>& n, vector<Fraction>& fractions){
     ifstream inFile;
     inFile.open(fileName);
@@ -159,6 +176,8 @@ bool interpretRaw(string fileName, map<ll,ll>& n, vector<Fraction>& fractions){
     return true;
 }
 
+//interpret higher-level FRACTRAN code
+//return false if the code fails
 bool interpretCode(string fileName, map<ll,ll>& n, vector<Fraction>& fractions, bool debugOutput){
     ifstream inFile;
     inFile.open(fileName);
@@ -274,6 +293,8 @@ bool interpretCode(string fileName, map<ll,ll>& n, vector<Fraction>& fractions, 
     return true;
 }
 
+//Given a number n represented by a map of the base->power of its prime factorization, and a fraction f represented
+// by a vector of PrimePow objects for its numerator and denominator, output if n*f is an integer
 bool makesInteger(map<ll,ll>& n, Fraction& f){
     for (vector<PrimePow>::iterator it = f.den.begin(); it != f.den.end(); it ++){
         if (n.count(it -> base) == 0 || n[it -> base] < (it -> power)){
@@ -283,6 +304,8 @@ bool makesInteger(map<ll,ll>& n, Fraction& f){
     return true;
 }
 
+//Given a number n represented by a map of the base->power of its prime factorization, and a fraction f represented
+// by a vector of PrimePow objects for its numerator and denominator, modify n to equal n*f
 void multiplyToInteger(map<ll,ll>& n, Fraction& f){
     for (vector<PrimePow>::iterator it = f.den.begin(); it != f.den.end(); it ++){
         n[it -> base] -= (it -> power);
