@@ -1,0 +1,835 @@
+Brainfuck code created
+****DO NOT RUN****
+
+//The following are copyFunctions: copy them into code; and alter them in given places to use given cells 
+//Notation:
+//  X     ~   a capital letter refers to a given cell 
+//  XY    ~   the distance from X to Y
+//  (XY>) ~   change the amount and direction of arrows to go from X to Y 
+//  *X    ~   the value of X 
+//  Xn    ~   given a number n; the cell n positions after X
+
+//Function Notation:
+//  Function name begins with dollar sign 
+//  Function name is directly followed by parentheses containing cell names separated by semicolons 
+//  Function code must be surrounded by curly braces
+//  Comments for code must contain:
+//      "pos(X:Y)"  ~   the pointer begins at cell X and ends at cell Y 
+//      "X(#:#)"    ~   determines what X must start at and end at:
+//          "#"  ~   any number;; for ending; ends at the same number it started at 
+//          "0"  ~   whatever number it must start or end at 
+//          "%"  ~   for endings only; some number determined by the function (the output, essentially)
+
+
+
+
+//$BitFlipper(A;B)
+//given cells A and B; flip the bit of *A
+//   set A to 0 if A greater than 0; set A to 1 if A is 0
+//pos(A:A)
+//A(#:%)
+//B(0:0)
+{
+    (AB>)+(BA<)         //set B to 1 (end at A)
+    [(AB>)-(BA<)[-]]    //if *A; set B to 0; set A to 0
+    (AB>)[(BA<)+(AB>)-]     //move *B to *A 
+    (BA<)               //end on A 
+}
+
+
+//$ifStatement(A;B)
+//given cells A and B; perform some action if *A is not zero 
+//pos(A:A)
+//A(#:#) 
+//B(0:0)
+{
+    [                           //if cell A 
+    (do something; end at A)    //do something; return to cell A 
+    [(AB>)+(BA<)-]              //move *A to *B (end on A)
+    ]                           //end while loop 
+    (AB>)[(BA<)+(AB>)-]         //move *B back to *A 
+    (BA<)                       //end on A
+}
+
+
+//$AndOperation(A;B;C;D)
+//given cells A; B; C; and D(1); set C to 1 if A and B are true; 0 if not 
+//pos(A:C)
+//A(#:#)
+//B(#:#)
+//C(0:%)
+//D(0:0)
+{
+    //if A; add 1 to C (A:A; B:D;)
+        [(AC>>)+(CA<<)[(AD>>>)+(DA<<<)-]] 
+        (AD>>>)[(DA<<<)+(AD>>>)-]
+    (DB<<)
+
+    //if B; add 1 to C (A:B; B:D;)
+        [(BC>)+(CB<)[(BD>>)+(DB<<)-]] 
+        (BD>>)[(DB<<)+(BD>>)-]  
+    (DC<)[(CD>)+>+<(DC<)-]     //copy C to D and D1 (end on C)
+    (CD>)               //go to D 
+    //if D; subtract D1 by 1
+        [>-<[-]]        //set D to 0 (end on D)
+    >[<(DC<)+(CD>)>-]   //copy D1 to C (end on D1)
+    <(DC<)              //end on C
+}
+
+
+//$OrOperation(A;B;C;D) 
+//given cells A; B; C; and D; set C to 1 if A or B are true; 0 if not 
+//pos(A:C)
+//A(#:#)
+//B(#:#)
+//C(0:%)
+//D(0:0)
+{
+    //if A; add 1 to C 
+        [(AC>>)+(CA<<)[(AD>>>)+(DA<<<)-]] 
+        (AD>>>)[(DA<<<)+(AD>>>)-]    
+    (DB<<)
+    //if B; add 1 to C 
+        [(BC>)+(CB<)[(BD>>)+(DB<<)-]]
+        (BD>>)[(DB<<)+(BD>>)-]      //move *D back to *B 
+    (DC<)[(CD>)+(DC<)-]     //move C to D (end on C)
+    (CD>)[(DC<)+(CD>)[-]]   //if D; set C to 1; set D to 0 (end on D)
+    (DC<)                   //end on C 
+}
+
+
+//$Division(A;B;C;D;E;F;G)
+//Given cells A; B; C; D; E; F; and G; set C to *A % *B and D to *A / *B 
+//pos(A:C)
+//A;B(#:#)
+//C;D(0:%)
+//E;F;G(0:0)
+{
+    [(AC>>)+(CD>)+(DA<<<)-]     //copy A to C and D (end on A)
+    (AD>>>)[(DA<<<)+(AD>>>)-]   //move D to A (end on D)
+    (DB<<)                      //go to B 
+    [(BD>>)+(DE>)+(EB<<<)-]     //copy B to D and E (end on B)
+    (BE>>>)[(EB<<<)+(BE>>>)-]   //move E to B (end on E)
+
+    (EC<<)[                     //while C 
+    -(CD>)-                     //decrement C and D (end on D)
+    [(DE>)+(EF>)+(FD<<)-]       //copy D to E and F (end on D)
+    (DF>>)[(FD<<)+(DF>>)-]      //move F to D (end on F)
+
+    (FE<)                   //go to E 
+    //Flip E 
+        (EF>)+(FE<)         //set F to 1 (end at E)
+        [(EF>)-(FE<)[-]]    //if *E; set F to 0; set E to 0
+        (EF>)[(FE<)+(EF>)-]     //move *F to *E 
+        (FE<)               //end on E 
+
+    //If E; add 1 to G; copy B to D and F; move F to B 
+        [                           //if cell E
+            (EG>>)+                 //add 1 to G (end on G)
+            (GB<<<<<)               //go to B 
+            [(BD>>)+(DF>>)+(FB<<<<)-]    //copy B to D and F (end on B)
+            (BF>>>>)[(FB<<<<)+(BF>>>>)-]        //move F to B (end on F)
+            (FE<)                   //go to E 
+        [(EF>)+(FE<)-]              //move *E to *F (end on E)
+        ]                           //end while loop
+        (EF>)[(FE<)+(EF>)-]         //move *F back to *E
+        (FE<)                       //end on E
+
+    [-]                 //bring E to 0
+
+    (EC<<)              //go to C
+    ]
+
+    (CB<)[(BC>)+(CE>>)+(EB<<<)-]    //copy B to C and E (end on B)
+    (BE>>>)[(EB<<<)+(BE>>>)-]       //move E to B (end on E)
+    (ED<)[(DC<)-(CD>)-]             //bring D to 0; take C with it (end on D)
+    (DG>>>)[(GD<<<)+(DG>>>)-]       //move G to D (end on G)
+    (GC<<<<)                        //end on C 
+}
+
+
+//$quick_division(A;B;C;D;E;F)
+//given cells A; B; C; D; E; and F; set D to A/C 
+//pos(A:A)
+//A(#:0)
+//B;E;F;G(0:0)
+//C(#:#)
+//D(0:%)
+{
+    [       //while A 
+    -(AB>)+(BC>)-       //decrement A and C; increment B (end on C)
+    [(CE>>)+(EF>)+(FC<<<)-]     //move C to E and F (end on C)
+    (CF>>>)[(FC<<<)+(CF>>>)-]   //move F to C (end on F)
+    +(FE<)[(EF>)-(FE<)[-]]      //set F to !*E; E to 0 (end on E)
+    (EF>)[(FD<<)+(DB<<)[(BC>)+(CB<)-](BF>>>>)[-]]   //if F; increment D; move B to C; set F to 0 (end on F)
+    (FA<<<<<)
+    ]
+    (AB>)[(BC>)+(CB<)-](BA<)    //move B to C (end on A)
+}
+
+
+//$EqualOperation(A;B;C;D;E;F)
+//Given cells A; B; C; D; E; and F(1); set C to 1 if *A equals *B 
+//pos(A:C)
+//A;B(#:#)
+//C(0:%)
+//D;E;F(0:0)
+{
+    [(AC>>)+(CD>)+(DA<<<)-]     //copy A to C and D (end on A)
+    (AD>>>)[(DA<<<)+(AD>>>)-]   //move D to A (end on D)
+    (DB<<)[(BD>>)+(DE>)+(EB<<<)-] //copy B to D and E (end on B)
+    (BE>>>)[(EB<<<)+(BE>>>)-]      //move E to B (end on E)
+
+    //decrement C and D until one is 0
+    +[                          //set E to 1; while E 
+    [-]                         //set E to 0 
+    (ED<)-(DC<)-                 //decrement C and D (end on C)
+
+    //set E to *C && *D 
+        //if C; add 1 to E (C:C; D:F;)
+            [(CE>>)+(EC<<)[(CF>>>)+(FC<<<)-]]
+            (CF>>>)[(FC<<<)+(CF>>>)-]
+        (FD<<)
+
+        //if D; add 1 to E (C:D; D:F;)
+            [(DE>)+(ED<)[(DF>>)+(FD<<)-]]
+            (DF>>)[(FD<<)+(DF>>)-]
+        (FE<)[(EF>)+>+<(FE<)-]     //copy E to F and F1 (end on E)
+        (EF>)               //go to F
+        //if F; subtract F1 by 1
+            [>-<[-]]        //set F to 0 (end on F)
+        >[<(FE<)+(EF>)>-]   //copy F1 to E (end on F1)
+        <(FE<)              //end on E
+    ]
+    (EC<<)
+    //set E to (C or D)
+        //if C; add 1 to E 
+            [(CE>>)+(EC<<)[(CF>>>)+(FC<<<)-]] 
+            (CF>>>)[(FC<<<)+(CF>>>)-]    
+        (FD<<)
+        //if D; add 1 to E
+            [(DE>)+(ED<)[(DF>>)+(FD<<)-]]
+            (DF>>)[(FD<<)+(DF>>)-]      //move *F back to *D
+        (FE<)[(EF>)+(FE<)-]     //move E to F (end on E)
+        (EF>)[(FE<)+(EF>)[-]]   //if F; set E to 1; set F to 0 (end on F)
+        (FE<)                   //end on E
+
+    (ED<)[-](DC<)[-]            //set C and D to 0
+    (CE>>)[(EC<<)+(CE>>)-]      //move E to C (end on E)
+    (EC<<)
+    //Flip C 
+        (CD>)+(DC<)         //set D to 1 (end at C)
+        [(CD>)-(DC<)[-]]    //if *C; set D to 0; set C to 0
+        (CD>)[(DC<)+(CD>)-]     //move *D to *C
+        (DC<)               //end on C
+}
+
+
+//$GreaterOperation(A;B;C;D;E;F)
+//Given cells A; B; C; D; E; and F(1); set C to 1 if *A is greater than *B 
+//pos(A:C)
+//A;B(#:#)
+//C(0:%)
+//D;E;F(0:0)
+{
+    [(AC>>)+(CD>)+(DA<<<)-]     //copy A to C and D (end on A)
+    (AD>>>)[(DA<<<)+(AD>>>)-]   //move D to A (end on D)
+    (DB<<)[(BD>>)+(DE>)+(EB<<<)-] //copy B to D and E (end on B)
+    (BE>>>)[(EB<<<)+(BE>>>)-]      //move E to B (end on E)
+
+    //decrement C and D until one is 0
+    +[                          //set E to 1; while E 
+    [-]                         //set E to 0 
+    (ED<)-(DC<)-                 //decrement C and D (end on C)
+
+    //set E to *C && *D 
+        //if C; add 1 to E (C:C; D:F;)
+            [(CE>>)+(EC<<)[(CF>>>)+(FC<<<)-]]
+            (CF>>>)[(FC<<<)+(CF>>>)-]
+        (FD<<)
+
+        //if D; add 1 to E (C:D; D:F;)
+            [(DE>)+(ED<)[(DF>>)+(FD<<)-]]
+            (DF>>)[(FD<<)+(DF>>)-]
+        (FE<)[(EF>)+>+<(FE<)-]     //copy E to F and F1 (end on E)
+        (EF>)               //go to F
+        //if F; subtract F1 by 1
+            [>-<[-]]        //set F to 0 (end on F)
+        >[<(FE<)+(EF>)>-]   //copy F1 to E (end on F1)
+        <(FE<)              //end on E
+    ]
+    (ED<)[-](DC<)               //set D to 0 (end on C)
+    [(CD>)+(DC<)[-]]            //if *C; set D to 1; bring C to 0 (end on C)
+    (CD>)[(DC<)+(CD>)-] //move D to C (end on D)
+    (DC<)               //end on C 
+}
+
+
+//$Multiplier(A;B;C;D;E)
+//Given cells A; B; C; D; and E; set C to *A times *B
+//pos(A:C)
+//A;B(#:#)
+//C(0:%)
+//D;E(0:0)
+{ 
+    [(AC>>)+(CD>)+(DA<<<)-]     //copy A to C and D (end on A)
+    (AC>>)[(CA<<)+(AC>>)-]      //move C to A (end on C)
+    (CD>)[                      //while D 
+    -                           //decrement D 
+    (DB<<)[(BC>)+(CE>>)+(EB<<<)-]   //copy B to C and E (end on B)
+    (BE>>>)[(EB<<<)+(BE>>>)-]       //move E to B (end on E)
+    (ED<)                       //end on D 
+    ]
+    (DC<)                       //end on C 
+}
+
+
+//$DigitsToNum(A;B;C;D;E;F;G;H)
+//Given cells A;B;C;D;E;F;G; and H; convert digits in input to a number in B until *A is input 
+//pos(A:B)
+//A(#:#)
+//B(0:%)
+//C;D;E;F;G;H(0:0)
+{
+    (AD>>>)+
+    [                   //while D 
+    [-]                 //set D to 0
+    (DC<),              //input to C (end on C)
+
+    (CA<<)              //got to A 
+
+    //set D to (A equals C)
+        [(AD>>>)+(DE>)+(EA<<<<)-]     //copy A to D and E (end on A)
+        (AE>>>>)[(EA<<<<)+(AE>>>>)-]   //move E to A (end on E)
+        (EC<<)[(CE>>)+(EF>)+(FC<<<)-] //copy C to E and F (end on C)
+        (CF>>>)[(FC<<<)+(CF>>>)-]      //move F to C (end on F)
+
+        //decrement D and E until one is 0
+        +[                          //set F to 1; while F
+        [-]                         //set F to 0
+        (FE<)-(ED<)-                 //decrement D and E (end on D)
+
+        //set F to *D && *E
+            //if D; add 1 to F (D:D; E:G;)
+                [(DF>>)+(FD<<)[(DG>>>)+(GD<<<)-]]
+                (DG>>>)[(GD<<<)+(DG>>>)-]
+            (GE<<)
+
+            //if E; add 1 to F (D:E; E:G;)
+                [(EF>)+(FE<)[(EG>>)+(GE<<)-]]
+                (EG>>)[(GE<<)+(EG>>)-]
+            (GF<)[(FG>)+>+<(GF<)-]     //copy F to G and G1 (end on F)
+            (FG>)               //go to G
+            //if G; subtract G1 by 1
+                [>-<[-]]        //set G to 0 (end on G)
+            >[<(GF<)+(FG>)>-]   //copy G1 to F (end on G1)
+            <(GF<)              //end on F
+        ]
+        (FD<<)
+        //set F to (D or E)
+            //if D; add 1 to F
+                [(DF>>)+(FD<<)[(DG>>>)+(GD<<<)-]]
+                (DG>>>)[(GD<<<)+(DG>>>)-]
+            (GE<<)
+            //if E; add 1 to F
+                [(EF>)+(FE<)[(EG>>)+(GE<<)-]]
+                (EG>>)[(GE<<)+(EG>>)-]      //move *G back to *E
+            (GF<)[(FG>)+(GF<)-]     //move F to G (end on F)
+            (FG>)[(GF<)+(FG>)[-]]   //if G; set F to 1; set G to 0 (end on G)
+            (GF<)                   //end on F
+
+        (FE<)[-](ED<)[-]            //set D and E to 0
+        (DF>>)[(FD<<)+(DF>>)-]      //move F to D (end on F)
+        (FD<<)
+        //flip D
+            (DE>)+(ED<)         //set E to 1 (end at D)
+            [(DE>)-(ED<)[-]]    //if *D; set E to 0; set D to 0
+            (DE>)[(ED<)+(DE>)-]     //move *E to *D
+            (ED<)               //end on D
+
+
+    //flip D 
+        (DE>)+(ED<)         //set E to 1 (end at D)
+        [(DE>)-(ED<)[-]]    //if *D; set E to 0; set D to 0
+        (DE>)[(ED<)+(DE>)-]     //move *E to *D
+        (ED<)               //end on D
+
+    //if D 
+        [                           //if cell D
+
+            (do something; end at D)    //do something; return to cell D
+            (DE>)++++++[(EC<<)--------(CE>>)-]   //subtract C by 48 (end on E)
+            ++++++++++                  //set E to 10
+            (EB<<<)                     //go to B 
+            //set F to (B times E)
+                [(BF>>>>)+(FG>)+(GB<<<<<)-]     //copy B to F and G (end on B)
+                (BF>>>>)[(FB<<<<)+(BF>>>>)-]      //move F to B (end on F)
+                (FG>)[                      //while G
+                -                           //decrement G
+                (GE<<)[(EF>)+(FH>>)+(HE<<<)-]   //copy E to F and H (end on E)
+                (EH>>>)[(HE<<<)+(EH>>>)-]       //move H to E (end on H)
+                (HG<)                       //end on G
+                ]
+                (GF<)                       //end on F
+            (FB<<<<)[-]             //set B to 0
+            (BE>>>)[-]              //set E to 0
+            (EF>)[(FB<<<<)+(BF>>>>)-]    //move F to B (end on F)
+
+            (FC<<<)[(CB<)+(BC>)-]    //move C to B (end on C)
+            (CD>)                   //end on D 
+
+
+        [(DE>)+(ED<)-]              //move *D to *E (end on D)
+        ]                           //end while loop
+        (DE>)[(ED<)+(DE>)-]         //move *E back to *D
+        (ED<)                       //end on D
+
+    ]
+
+    (DC<)[-]        //set C to 0 
+    (CB<)           //end on B 
+}
+
+
+//$DigitsToNum2(A;B;C;D;E;F;G;H)
+//given cells A; B; C; D; E; F; G(1); and H; input digits into a number value in A until any non digit char is reached 
+//pos(A:A)
+//A(0:%)
+//B;C;D;E;F;G;H(0:0)
+{
+    (AD>>>)+            //set D to 1 
+    [                   //while D 
+    [-]                 //set D to 0
+    (DB<<),             //input to B 
+    (BD>>)++++++++[(DC<)++++++(CD>)-](DC<)-     //set C to 47 (end on C)
+    (CB<)                   //end on B 
+
+    //set E to (*B greater than *C) (B1;C2;E4;D3;F5;G6)
+        [(BE>>>)+(ED<)+(DB<<)-]     //copy B to E and D (end on B)
+        (BD>>)[(DB<<)+(BD>>)-]   //move D to B (end on D)
+        (DC<)[(CD>)+(DF>>)+(FC<<<)-] //copy C to D and F (end on C)
+        (CF>>>)[(FC<<<)+(CF>>>)-]      //move F to C (end on F)
+
+        //decrement E and D until one is 0
+        +[                          //set F to 1; while F 
+        [-]                         //set F to 0 
+        (FD<<)-(DE>)-                 //decrement E and D (end on E)
+
+        //set F to *E && *D
+            //if E; add 1 to F (E:E; D:G;)
+                [(EF>)+(FE<)[(EG>>)+(GE<<)-]]
+                (EG>>)[(GE<<)+(EG>>)-]
+            (GD<<<)
+
+            //if D; add 1 to F (E:D; D:G;)
+                [(DF>>)+(FD<<)[(DG>>>)+(GD<<<)-]]
+                (DG>>>)[(GD<<<)+(DG>>>)-]
+            (GF<)[(FG>)+>+<(GF<)-]     //copy F to G and G1 (end on F)
+            (FG>)               //go to G
+            //if G; subtract G1 by 1
+                [>-<[-]]        //set G to 0 (end on G)
+            >[<(GF<)+(FG>)>-]   //copy G1 to F (end on G1)
+            <(GF<)              //end on F
+        ]
+        (FD<<)[-](DE>)               //set D to 0 (end on E)
+        [(ED<)+(DE>)[-]]            //if *E; set D to 1; bring E to 0 (end on E)
+        (ED<)[(DE>)+(ED<)-] //move D to E (end on D)
+        (DE>)               //end on E
+
+    (EC<<)+++++++++++       //set C to 58
+    //set F to (*C greater than *B) (C2;B1;F5;D3;G6;H7)
+        [(CF>>>)+(FD<<)+(DC<)-]     //copy C to F and D (end on C)
+        (CD>)[(DC<)+(CD>)-]   //move D to C (end on D)
+        (DB<<)[(BD>>)+(DH>>>>>)+(HB<<<<<<<)-] //copy B to D and H (end on B)
+        (BH>>>>>>>)[(HB<<<<<<<)+(BH>>>>>>>)-]      //move H to B (end on H)
+
+        //decrement F and D until one is 0
+        +[                          //set H to 1; while H
+        [-]                         //set H to 0
+        (HD<<<<<)-(DF>>)-                 //decrement F and D (end on F)
+
+        //set H to *F && *D
+            //if F; add 1 to H (F:F; D:G;)
+                [(FH>>>)+(HF<<<)[(FG>)+(GF<)-]]
+                (FG>)[(GF<)+(FG>)-]
+            (GD<<<)
+
+            //if D; add 1 to H (F:D; D:G;)
+                [(DH>>>>>)+(HD<<<<<)[(DG>>>)+(GD<<<)-]]
+                (DG>>>)[(GD<<<)+(DG>>>)-]
+            (GH>>)[(HG<<)+>+<(GH>>)-]     //copy H to G and G1 (end on H)
+            (HG<<)               //go to G
+            //if G; subtract G1 by 1
+                [>-<[-]]        //set G to 0 (end on G)
+            >[<(GH>>)+(HG<<)>-]   //copy G1 to H (end on G1)
+            <(GH>>)              //end on H
+        ]
+        (HD<<<<<)[-](DF>>)               //set D to 0 (end on F)
+        [(FD<<)+(DF>>)[-]]            //if *F; set D to 1; bring F to 0 (end on F)
+        (FD<<)[(DF>>)+(FD<<)-] //move D to F (end on D)
+        (DF>>)               //end on F
+
+    (FE<)           //go to E 
+    //set D to (*E && *F) (E4;F5;D3;G6)
+        //if E; add 1 to D (E:E; F:G;)
+            [(ED<)+(DE>)[(EG>>)+(GE<<)-]]
+            (EG>>)[(GE<<)+(EG>>)-]
+        (GF<)
+
+        //if F; add 1 to D (E:F; F:G;)
+            [(FD<<)+(DF>>)[(FG>)+(GF<)-]]
+            (FG>)[(GF<)+(FG>)-]
+        (GD<<<)[(DG>>>)+>+<(GD<<<)-]     //copy D to G and G1 (end on D)
+        (DG>>>)               //go to G
+        //if G; subtract G1 by 1
+            [>-<[-]]        //set G to 0 (end on G)
+        >[<(GD<<<)+(DG>>>)>-]   //copy G1 to D (end on G1)
+        <(GD<<<)              //end on D
+
+    (DE>)[-](EF>)[-]            //set E and F to 0 (end on F)
+    (FC<<<)----------           //set C to 48 (end on C)
+    (CD>)                       //go to D 
+
+    //if D; multiply A by 10; subtract *C from *B; add *B to *A 
+        [                           //if cell D 
+        (do something; end at D)    //do something; return to cell D
+            (DC<)[(CB<)-(BC>)-]     //bring C to 0; and bring B down by same amount (end on C)
+            ++++++++++              //set C to 10
+            (CA<<)              //go to A 
+            //set E to (*A times *C)
+                [(AE>>>>)+(EF>)+(FA<<<<<)-]     //copy A to E and F (end on A)
+                (AE>>>>)[(EA<<<<)+(AE>>>>)-]      //move E to A (end on E)
+                (EF>)[                      //while F
+                -                           //decrement F
+                (FC<<<)[(CE>>)+(EG>>)+(GC<<<<)-]   //copy C to E and G (end on C)
+                (CG>>>>)[(GC<<<<)+(CG>>>>)-]       //move G to C (end on G)
+                (GF<)                       //end on F
+                ]
+                (FE<)                       //end on E
+            (EA<<<<)[-]                 //set A to 0 (end on A)
+            (AE>>>>)[(EA<<<<)+(AE>>>>)-]    //move E to A (end on E)
+            (EB<<<)[(BA<)+(AB>)-]       //move B to A 
+            (BD>>)                  //end on D 
+
+        [(DE>)+(ED<)-]              //move *D to *E (end on D)
+        ]                           //end while loop
+        (DE>)[(ED<)+(DE>)-]         //move *E back to *D
+        (ED<)                       //end on D
+
+    (DC<)[-](CD>)       //set C to 0 (end on D)
+
+    ]
+
+    (DB<<)[-]   //set B to 0  ~~ B will have the last char input; modify this to save it for reference 
+    (BA<)       //end on A 
+}
+
+
+//$NumToDigits(A;B;C;D;E;F;G;H;I)
+//given cells A; B(3); C; D; E; F; G; H; and I; put digit chars in B; representing *A 
+//cell B is left blank; B1 contains most significant digit; B2 and B3 contain next; or are blank 
+//pos(A:A)
+//A(#:#)
+//B(0:%)
+//C;D;E;F;G;H;I(0:0)
+{
+    [(AB>)+(BC>>>>)+(CA<<<<<)-]     //copy A to B and C (end on A)
+    (AB>)[(BA<)+(AB>)-]             //move B to A (end on B)
+    (BD>>>>>)++++++++++             //set D to 10 (end on D)
+    (DA<<<<<<)                      //go to A 
+    [                               //while A 
+
+    //divide *A by *D; mod to E; div to F (A;D;E;F;G;H;I)
+        [(AE>>>>>>>)+(EF>)+(FA<<<<<<<<)-]     //copy A to E and F (end on A)
+        (AF>>>>>>>>)[(FA<<<<<<<<)+(AF>>>>>>>>)-]   //move F to A (end on F)
+        (FD<<)                      //go to D
+        [(DF>>)+(FG>)+(GD<<<)-]     //copy D to F and G (end on D)
+        (DG>>>)[(GD<<<)+(DG>>>)-]   //move G to D (end on G)
+
+        (GE<<)[                     //while E
+        -(EF>)-                     //decrement E and F (end on F)
+        [(FG>)+(GH>)+(HF<<)-]       //copy F to G and H (end on F)
+        (FH>>)[(HF<<)+(FH>>)-]      //move H to F (end on H)
+
+        (HG<)                   //go to G
+        //flip G
+            (GH>)+(HG<)         //set H to 1 (end at G)
+            [(GH>)-(HG<)[-]]    //if *G; set H to 0; set G to 0
+            (GH>)[(HG<)+(GH>)-]     //move *H to *G
+            (HG<)               //end on G
+
+        //If G; add 1 to I; copy D to F and H; move H to D
+            [                           //if cell G
+                (GI>>)+                 //add 1 to I (end on I)
+                (ID<<<<<)               //go to D
+                [(DF>>)+(FH>>)+(HD<<<<)-]    //copy D to F and H (end on D)
+                (DH>>>>)[(HD<<<<)+(DH>>>>)-]        //move H to D (end on H)
+                (HG<)                   //go to G
+            [(GH>)+(HG<)-]              //move *G to *H (end on G)
+            ]                           //end while loop
+            (GH>)[(HG<)+(GH>)-]         //move *H back to *G
+            (HG<)                       //end on G
+
+        [-]                 //bring G to 0
+
+        (GE<<)              //go to E
+        ]
+
+        (ED<)[(DE>)+(EG>>)+(GD<<<)-]    //copy D to E and G (end on D)
+        (DG>>>)[(GD<<<)+(DG>>>)-]       //move G to D (end on G)
+        (GF<)[(FE<)-(EF>)-]             //bring F to 0; take E with it (end on F)
+        (FI>>>)[(IF<<<)+(FI>>>)-]       //move I to F (end on I)
+        (IE<<<<)                        //end on E
+
+
+    (EA<<<<<<<)[-]                  //set A to 0 
+    (AF>>>>>>>>)[(FA<<<<<<<<)+(AF>>>>>>>>)-]    //move F to A (end on F)
+    ++++++[(FE<)++++++++(EF>)-]     //add 48 to E (end on F)
+    (FE<)[(EB<<<<<<)+(BE>>>>>>)-]               //move E to B (end on E)
+    (EB<<<<<<)>>                                  //go to B2
+    [>+<-]                          //move B2 to B3 (end on B2)
+    <[>+<-]                         //move B1 to B2 (end on B1)
+    <[>+<-]                         //move B to B1 (end on B)
+
+    (BA<)               //end while loop on A 
+    ]
+    (AD>>>>>>)[-]       //set D to 0 (end on D)
+    (DC<)[(CA<<<<<)+(AC>>>>>)-]    //move C to A (end on C)
+    (CA<<<<<)           //end on A
+}
+
+
+//$print_num(A;B;C;D;E;F;G;H;I;J)
+//using cells A; B; C; D; E; F; G; H; I; and J; output the *A as digits 
+//pos(A:A)
+//A(#:0)
+//B;C;D;E;F;G;H;I;J(0:0)
+{
+    (AE>>>>)++++++++++  //set E to 10
+    [(ED<)++++++++++(DG>>>)+(GE<<)-]    //set E to 0; D to 100; G to 10 (end on E)
+    (EA<<<<)[(AB>)+(BA<)-]              //move A to B 
+    (AB>)[                  //while B 
+    (BA<)+(AB>)-(BC>)+(CD>)-(DF>>)+(FG>)-          //decrement B; D; and G; increment A; C; and F (end on G)
+    (GD<<<)[(DI>>>>>)+(IJ>)+(JD<<<<<<)-]    //move D to I and J (end on D)
+    (DJ>>>>>>)[(JD<<<<<<)+(DJ>>>>>>)-]      //move J to D (end on J)
+    +(JI<)[(IJ>)-(JI<)[-]]              //set J to 1; if I; set J and I to 0 (end on I)
+    (IJ>)[(JE<<<<<)+(EC<<)[(CD>)+(DC<)-](CJ>>>>>>>)[-]] //if J; increment E; move C to D; set J to 0 (end on J)
+    (JG<<<)[(GI>>)+(IJ>)+(JG<<<)-]      //move G to I and J (end on G)
+    (GJ>>>)[(JG<<<)+(GJ>>>)-]           //move J to G (end on J)
+    +(JI<)[(IJ>)-(JI<)[-]]              //set J to 1; if I; set J and I to 0 (end on I)
+    (IJ>)[(JH<<)+(HF<<)[(FG>)+(GF<)-](FJ>>>>)[-]]   //if J; increment H; move F to G; set J to 0 (end on J)
+    (JB<<<<<<<<)
+    ]
+
+    (BC>)[-](CD>)[-](DF>>)[-](FG>)[-]   //set C; D; F; and G to 0 (end on G)
+    (GH>)[(HB<<<<<<)+(BA<)----------(AH>>>>>>>)-]   //move H to B; subtract A by 10*H (end on H)
+    (HE<<<)[(EC<<)+(CB<)----------(BE>>>)-]     //move E to C; subtract B by 10*E (end on E)
+    (EF>)++++++++++++++++[(FE<)+++(ED<)+++(DA<<<)+++(AF>>>>>)-] //add 48 to A; D; and E (end on F)
+    (FC<<<)[(CE>>)[(EC<<)+(CE>>)-](ED<)[(DB<<)+(BD>>)-](DC<).[-]]   
+            //if C; move E to C; move D to B; output C; bring C to 0 (end on C)
+    (CB<)[(BD>>)[(DB<<)+(BD>>)-](DB<<).[-]]     //if B; move D to B; output; bring B to 0 (end on B)
+    (BE>>>)[-](ED<)[-]                  //set D and E to 0 (end on D)
+    (DA<<<).[-]                         //print A; set A to 0 (end on A)
+}
+
+
+//array pointer travel 
+>>[>>]      //from array_port to landing_cell_1 (must be at 0)
+<<[<<]      //from landing_cell_1 to array_port (must be at 0)
+
+
+//array data travel: moving data from one side of array to the other 
+//array must have at least one element 
+//pointer ends in landing_cell_1
+//moving data from array_port to landing_cell_1 
+    >>[[-]<<[>>+<<-]]>>
+    >>[[-]<<[>>+<<-]+>>>>]
+    <<[>>+<<-]+>>
+//moving data from landing_cell_1 to array_port 
+    <<[[-]>>[<<+>>-]]<<
+    <<[[-]>>[<<+>>-]+<<<<]
+    >>[<<+>>-]+<<
+
+
+//array index location 
+//brings the pointer to work cell of index *array_port; brings array_port to 0
+    >>[-]<<[>>+<<-]>>
+    [[>>+<<-]+>>--]+
+
+
+//code golf unicode 
+{
+    //A: height
+    //B: width
+    //C;D;E: a; b; and c variables
+
+    //set A; B; and D to 70
+    (AC>>)++++++++++[(CB<)+++++++(BA<)+++++++(AD>>>)+++++++(DC<)-]	//end on C
+
+    //move *D to *H
+    (CD>)[(DH>>>>)+(HD<<<<)-]	//end on D
+
+    //set C; D; and E to 125
+    (DG>>>)+++++[(GF<)+++++(FG>)-](GF<)[(FE<)+++++(ED<)+++++(DC<)+++++(CF>>>)-]	//end on F
+
+    ++++++++++[(FC<<<)++++++++++(CF>>>)-]		//set C to 225 (end on F)
+
+    (FC<<<)+				//set C to 226 (end on C)
+    (CD>)+++				//set D to 128
+    (DE>)+++				//set E to 128 (end on E)
+
+    //move *H to F and G
+    (EH>>>)[(HF<<)+(FG>)+(GH>)-]	//end on H 
+
+
+    ++++++++++		//set H to 10
+    (HJ>>)++++++++++++++++++++++++++++++++		//set J to 32 (end on J)
+
+
+    (JA<<<<<<<<<)
+
+    [			//while A 
+    (AB>)
+    [			//while B 
+    (BC>).(CD>).(DE>).			//print char (end on E)
+    +							//increment E 
+    (EJ>>>>>).					//print space (end on J)
+    (JB<<<<<<<<)-				//decrement B 
+    ]
+    (BH>>>>>>)..					//print new line (end on H)
+    (HF<<)[(FE<)-(EB<<<)+(BI>>>>>>>)+(IF<<<)-]		//move *F to B; E; and I (end on F)
+    (FI>>>)[(IF<<<)+(FI>>>)-]	//move *I to F (end on I)
+    (ID<<<<<)+					//increment D
+    (DA<<<)-					//decrement D
+
+    ]
+}
+
+
+
+//$bcd_instantiate(C)
+//given port cell C; instantiate a bcd_array at val=0; in incremental mode 
+//pos(C:C)
+//C(#:0)
+{
+    [>>+<<-]>>++
+    [>+<[>>>+<<<-]>>>-]
+    <<[<<<]>>>>>>
+    [<---------->>>>]
+    <<<[<<<]
+}
+
+
+//$bcd_increment(C)
+//given port cell C; increment a bcd_array
+//must be in incremental mode  
+//pos(C:C)
+//C(0:0)
+{
+    >>>[>>>]<<<<<+                        //set X_cell of last element to 1
+    [                                       //while X_cell of current element is 1
+    [-]>+                                   //set X to 0; increment Y (end on Y)
+    >[-]                                //set Z to 0
+    <[<+>>+<-]              //move Y to X and Z (end on Y)
+    <
+    //bit_flip X (end on X)
+        >+<[>-<[-]]>[<+>-]<
+    >>[<+>-]+                   //move Z to Y; set Z to 1 (end on Z)
+    <<[>----------<[-]<<<+>>>]  //if *X; set Y to ~10; set X to 0; set prev_X to 1 (end on X)
+    <<<                 //go to prev_X 
+    ]
+    >>[<<<]             //go to C 
+    >>[-]>>>[-]>[<<<]        //set Y_cell of buffer_0 and buffer_1 to 0 (end on C)
+}
+
+
+//$bcd_decrement(C)
+//given port cell C; decrement a bcd_array 
+//pos(C:C)
+//C(0:0)
+{
+    >>>[>>>]<<<<<+                        //set X_cell of last element to 1
+    [                                       //while X_cell of current element is 1
+    [-]>-                                   //set X to 0; decrement Y (end on Y)
+    >[-]                                //set Z to 0
+    <[<+>>+<-]              //move Y to X and Z (end on Y)
+    <
+    //bit_flip X (end on X)
+        >+<[>-<[-]]>[<+>-]<
+    >>[<+>-]+                   //move Z to Y; set Z to 1 (end on Z)
+    <<[>++++++++++<[-]<<<+>>>]  //if *X; set Y to ~10; set X to 0; set prev_X to 1 (end on X)
+    <<<                 //go to prev_X 
+    ]
+    >>[<<<]             //go to C 
+    >>[-]>>>[-]>[<<<]        //set Y_cell of buffer_0 and buffer_1 to 0 (end on C)
+}
+
+
+//$bcd_fixed_output(C)
+//given port cell C; output all digits of a bcd_array; including leading 0's 
+//muse be in incremental mode 
+//pos(C:C)
+//C(0:0)
+{
+    >>>>>>>>>[
+        <<+++++++++++[>>+++++<<-]       //set Z to 56 (end on X)
+        >>++                                    //set Z to 58
+        <[<+>>+<-]                  //move Y to X and Z (end on Y)
+        >.                                      //output Z 
+        [-]+<<[>+<-]                    //set Z to 1; move X to Y (end on X)
+        >>>>>                       //go to next element 
+    ]
+    <<<[<<<]                //go to C 
+}
+
+
+//$bcd_output(C)
+//given port cell C; output all digits of a bcd_array; not including leading 0's 
+//must be in incremental mode 
+//pos(C:C)
+//C(0:0)
+{
+    >>>>>>>>>       //go to Z_cell of elem_0
+    [
+    <++++++++++     //convert to num mode (end on Y)
+    [<+>-]          //move Y to X (end on Y)
+    >[-]<<          //set Z to 0 (end on X)
+    [>>+<<[>+<-]]   //if digits is not 0; set Z to 1; move X to Y (end on X)
+    >>[<<+>>-]     //move Z to X (end on Z)
+    +++++[<++++++++++>-]<--     //convert to char mode (end on Y)
+    >+>>>           //set Z to 1; go to next cell 
+    ]
+    <<<[<<<]        //go to C 
+    >>>[<<[>.>>[-]+<<<[-]]>>>>>]    //print all elements that are not leading zeros (end on landing_cell_2)
+    //if landing_cell_0 is 1; then a number was printed; if not; '0' needs to be printed 
+    <<>+<[>-<[-]]>[<+>-]<       //bit_flip landing_cell_0 
+    [++++[>++++++++++<-]>--.[-]<] //if landing_cell_0; print '0'
+    <[<<<]                      //return to C 
+    >>>>>>>>>[+++++++++[<------>-]<++>+>>>]<<<[<<<]  //convert back to incremental mode (end on C)
+}
+
+//$bcd_value(C)
+//given port cell C; set C to numerical value of the bcd_array 
+//pos(C:C)
+//C(0:%)
+{
+    >>>[[-]<[<+>>+<-]<[>>>++++++++++<<<-]>>[<+>-]+>>>]<<    //set landing_cell_0 to 10*val (end on landing_cell_0)
+    [>+<----------]>[<+>-]<                   //set landing_cell_0 to val (end on landing_cell_0)
+    <[>[<<<+>>>-]<<<<]>[<+>-]<                //move val to C (end on C)
+}
+
+//$bcd_truth_value(C)
+//given port cell C; set C to 1 if bcd_val is not 0
+//must be in incremental mode 
+//pos(C:C)
+//C(0:%)
+{
+    >>>>>>>>>[<[<+>>+<-]<++++++++++>>[<+>-]<->+>>>] //set every X_cell to num val of digit (end on landing_cell_2)
+    <<<<<<[>[<<<+>>>-]<<<<]     //bring sum of digits to X_cell of buffer_0 (end on C)
+    >[[-]<+>]<                  //if sum is not 0; set C to 1 (end on C)
+}
+
+
+
+
+//$!()    marking end of file for completer.cc 

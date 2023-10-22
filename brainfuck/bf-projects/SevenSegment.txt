@@ -1,0 +1,145 @@
+//input digits chars; output seven segment display of the number over three lines 
+
+//  _     _  _     _  _  _  _  _
+// | |  | _| _||_||_ |_   ||_||_|
+// |_|  ||_  _|  | _||_|  ||_| _|
+
+//'_' = 95
+//'|' = 124
+//' ' = 32
+//'\n' = 10
+
+
+// ***** top section *****
+
+-[[>+<-]>-]      //go to C
+++++++++++                      //set C to 10 
+[[>>>>+<<<<-]>>>>>+<-]>[<<<<]   //establish work cells of top array (end on D)
+
+//set every data cell to 32
+++++++++[(DC<)++++(CD>)-]       //set C to 32 (end on D)
+(DC<)[>>>>>[<+<+<+>>>>>>>]<<<<[<<<<]<-]     //set every data cell to 32 (end on C)
+
+
+// 0 _ 1   2 _ 3 _ 4   5 _ 6 _ 7 _ 8 _ 9 _
+
+//set some data cells to 95 
+(CD>)+++++++++[(DC<)+++++++(CD>)-]          //set C to 63 (end on D)
+(DC<)[>(0)>>+>>(1)>>>>(2)>>+>>(3)>>+>>(4)>>>>(5)>>+>>(6)>>+>>(7)>>+>>(8)>>+>>(9)>>+>>[<<<<]<-] //end on C 
+
+//add 29 to some cells to get '|' (none in top array) 
+
+(CD>)>>>>[>>>>]             //go to H 
+>                           //go to middle A 
+
+
+// ***** middle section *****
+
+(AC>>>>>>>>>>>>>>>>>>>>>>)      //go to C
+++++++++++                      //set C to 10 
+[[>>>>+<<<<-]>>>>>+<-]>[<<<<]   //establish work cells of middle array (end on D)
+
+//set every data cell to 32
+++++++++[(DC<)++++(CD>)-]       //set C to 32 (end on D)
+(DC<)[>>>>>[<+<+<+>>>>>>>]<<<<[<<<<]<-]     //set every data cell to 32 (end on C)
+
+
+// 0| |1  |2 _|3 _|4|_|5|_ 6|_ 7  |8|_|9|_|
+
+//set some data cells to 95 
+(CD>)+++++++++[(DC<)+++++++(CD>)-]          //set C to 63 (end on D)
+(DC<)[>(0)>+>>+>(1)>>>+>(2)>>+>+>(3)>>+>+>(4)>+>+>+>
+(5)>+>+>>(6)>+>+>>(7)>>>+>(8)>+>+>+>(9)>+>+>+>[<<<<]<-] //end on C 
+
+//add 29 to some cells to get '|' 
+(CD>)+++++++[(DC<)++++(CD>)-](DC<)+         //set C to 29 (end on C)
+[>(0)>+>>+>(1)>>>+>(2)>>>+>(3)>>>+>(4)>+>>+>
+(5)>+>>>(6)>+>>>(7)>>>+>(8)>+>>+>(9)>+>>+>[<<<<]<-] //end on C 
+
+(CD>)>>>>[>>>>]             //go to H 
+>                           //go to bottom A 
+
+
+// ***** bottom section *****
+
+(AC>>>>>>>>>>>>>>>>>>>>>>)      //go to C
+++++++++++                      //set C to 10 
+[[>>>>+<<<<-]>>>>>+<-]>[<<<<]   //establish work cells of bottom array (end on D)
+
+//set every data cell to 32
+++++++++[(DC<)++++(CD>)-]       //set C to 32 (end on D)
+(DC<)[>>>>>[<+<+<+>>>>>>>]<<<<[<<<<]<-]     //set every data cell to 32 (end on C)
+
+
+// 0|_|1  |2|_ 3 _|4  |5 _|6|_|7  |8|_|9 _|
+
+//set some data cells to 95 
+(CD>)+++++++++[(DC<)+++++++(CD>)-]          //set C to 63 (end on D)
+(DC<)[>(0)>+>+>+>(1)>>>+>(2)>+>+>>(3)>>+>+>(4)>>>+>
+(5)>>+>+>(6)>+>+>+>(7)>>>+>(8)>+>+>+>(9)>>+>+>[<<<<]<-] //end on C 
+
+//add 29 to some cells to get '|' 
+(CD>)+++++++[(DC<)++++(CD>)-](DC<)+         //set C to 29 (end on C)
+[>(0)>+>>+>(1)>>>+>(2)>+>>>(3)>>>+>(4)>>>+>
+(5)>>>+>(6)>+>>+>(7)>>>+>(8)>+>>+>(9)>>>+>[<<<<]<-] //end on C 
+
+(CA<<<<<<<<<<<<<<<<<<<<<<)
+<                   //go to middle H 
+
+// ***** middle section *****
+
+<<<<[<<<<]      //go across middle array (end on D)
+(DA<<<<<<<<<<<<<<<<<<<<<<<)
+<                   //go to top H 
+
+
+// ***** top section ***** 
+
+<<<<[<<<<]      //go across top array (end on D)
+(DB<<)          //go to B 
+
+,[<,]           //create letter stack (end on left side of stack)
+
+>[>]            //go to right side of stack (end on C)
+
+(CD>)>>>>           //go to work cell of first element of array 
+
+[                   //while there is an array in the current section 
+<<<<                //go to D 
+
+(DB<<)[          //while B 
+    [(BC>)+(CD>)+(DB<<)-]    //copy B to C and D (end on B)
+    (BD>>)
+    //move *D across array to H (end on H)
+        >>>>[[-]<<<<[>>>>+<<<<-]]>>>>
+        >>>>[[-]<<<<[>>>>+<<<<-]+>>>>>>>>]
+        <<<<[>>>>+<<<<-]+>>>>
+
+    //add *H to middle stack 
+        -(H^B>>>>>>>>>>>>>>>>>>>>>>)[<]+        //set next empty cell in stack to 1
+        [>]<(^BH<<<<<<<<<<<<<<<<<<<<<<)         //return to H 
+        [(H^B>>>>>>>>>>>>>>>>>>>>>>)[<]>+[>]<
+        (^BH<<<<<<<<<<<<<<<<<<<<<<)-]           //move H to next cell in stack (end on H)
+
+    <<<<[<<<<]    //travel back across array to top section (end on D)
+    (DC<)[(CD>)+(DC<)-]    //move C to D (end on C)
+    //subtract D by 48 
+        (CB<)++++++[(BC>)++++++++(CB<)-]    //set C to 48 (end on B)
+        (BC>)[(CD>)-(DC<)-]                 //bring C to 0; D down same amount (end on C)
+    (CD>)
+    //access *D index of array and print data cells 
+        >>>>[-]<<<<[>>>>+<<<<-]>>>>
+        [[>>>>+<<<<-]+>>>>--]+              //go to *D index work cell 
+        <<<.>.>.>                           //print each data cell 
+        [<<<<]                              //go to D 
+
+    (DB<<)<[[>+<-]<]    //shift every value in letter stack to the right one (end on first empty cell of stack)
+    >>[>]<    //end on B
+]
+
+(BC>)++++++++++.[-]             //print new line (end on C)
+(CD>)>>>>[>>>>]                     //go to H 
+(H^D>>>>>>>>>>>>>>>>>>>>>>>>)   //go to D of next section 
+>>>>                            //end on work cell of first element of array 
+
+]

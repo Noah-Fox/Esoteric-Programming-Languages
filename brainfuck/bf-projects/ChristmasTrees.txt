@@ -1,0 +1,63 @@
+Code Golf Christmas Trees 
+
+
+//A holds the number value of the tree 
+
++++++++
+
+
+//put 32 in E; 42 in F; 10 in G
+
+(AD>>>)++++++++++       //set D to 10
+[(DE>)+++(EF>)++++(FG>)+(GD<<<)-]    //set D to 0; E to 30; F to 40; G to 10 (end on D)
+(DE>)++(EF>)++(FA<<<<<)
+
+
+[               //while A 
+
+
+[(AB>)+(BC>)+(CB<<)-]       //copy A to B and C (end on A)
+(AC>>)[(CA<<)+(AC>>)-]      //move C to A (end on C)
+++++++++++                  //set C to 10
+(CB<)[(BC>)-(CB<)-]         //bring B to 0; C down same amount (end on B)
+(BC>)                       //go to C 
+[(CB<)+(BD>>)+(DC<)-]       //copy C to B and D (end on C)
+(CB<)                       //end on B 
+
+[                           //while B 
+(BD>>)                     //go to D 
+[(DE>).(EC<<)-(CD>)-]       //print *E until D is 0; bring C to negative *D (end on D)
+
+(DC<)+(CD>)                 //add 1 to C (end on D)
+
+(DA<<<)[(AC>>)-(CD>)+(DA<<<)-]  //subtract C by *A; copy A to D (end on A)
+(AD>>>)[(DA<<<)+(AD>>>)-]       //bring D to A (end on D)
+(DC<)++++++++++                 //add 10 to C (end on C)
+[(CD>)++(DC<)-]                 //set D to 2 times *C; bring C to 0 (end on C) 
+(CD>)-                           //go to D; decrement it 
+[(DF>>).(FD<<)-]                //while D; print F (end on D)
+
+(DG>>>).                   //print G 
+
+(GB<<<<<)-                  //decrement B (end on B)
+
+[(BC>)+(CD>)+(DB<<)-]       //copy B to C and D (end on B)
+(BC>)[(CB<)+(BC>)-]         //move C to B (end on C)
+(CB<)                       //end on B 
+
+]
+
+
+
+(BA<)[(AB>)+(BC>)+(CA<<)-]      //copy A to B and C (end on A)
+(AB>)[(BA<)+(AB>)-]             //move B to A (end on B)
+(BD>>)++++++++++                 //set D to 9 (end on D)
+(DC<)[(CD>)-(DC<)-]             //bring C to 0; bring D down same amount (end on C)
+(CD>)[(DE>).(ED<)-]             //print E until D is 0 (end on D)
+(DF>>).                         //print F 
+(FG>)..                         //print G twice (end on G)
+
+
+(GA<<<<<<)-                     //decrement A 
+
+]

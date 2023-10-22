@@ -1,0 +1,113 @@
+//1: create right_array containing second letter of every state symbol
+++++++++[>++++++++++<-]>    //set second cell to 80 (end on second cell)
+[[>>+<<-]>>-]               //go to cell 161 (end on B) 
+
+//set every X and Y cell in stack to 3 
++++++[(BX<)++++++++++(XB>)-](BX<)+     //set first X to 51 (end on X)
+[[<<<+>>>-]+++<+++<<-]+++[>>>](DB<<)       //set every X cell to 3 (end on B)
+
+//1b: fill stack with info on how to create array 
+<--<--<+
+<-<-<+
+<++++<---<
+<+<++++<+
+<--<++<++
+<<++++<
+<--<---<+
+<++++<+++++<
+<++++++++++++<-<
+<-<++++++<
+<<---<
+<--<<
+<<-<
+<++++++++<+<
+<+++++++++<++++<+
+<-<+<+
+<+<<+
+<+++++++<--<+
+<<++++++<+
+<-<---<
+<++++++<---<
+<-<++++++<+
+<++<--<++
+<++++++++++<+<++
+<<<++
+<<<+
+<+++++<+++++<
+<+++<---<
+<++++++<++++++<+
+<-<+++++<
+<--<---<
+<+++++++++++++<<
+<+++<---<
+<+++++++++++++<++++++<+
+<+<--<+
+<++<<
+<++<<+
+<-<--<++
+<+<+<
+<+<-<
+<+++<<
+<+<+<
+<-<++++<
+<<+++++<+
+<--<+++++<+
+<-<+<++
+<-<+<+
+<--<+++++<
+<--<---<+
+<+++++++++++<+<++
+<--<---
+>[>>>](DB<<)             //go to B 
+
+//in the following; X; Y; and Z are first; second; and third elements on stack 
+<[              //while stack is not empty 
+[>(BD>>)>>[>>]+[<<](DB<<)<-]      //bring X to 0; add an equal amount of elements to array (end on X)
+<<            //#do not decrement Y and Z (end on Z)
+[>++++++++++<-]     //add 10 times *Z to Y (end on Z)
++++++++++++++[>+++++<-]     //add 65 to Y (end on Z)
+(ZY>)[(YD>>>>)>>[>>]<<<+>[<<](DY<<<<)-]     //move Y to last element of array (end on Y)
+
+<<[[>>>+<<<-]<[>>>+<<<-]<[>>>+<<<-]<]>>>>>>[>>>]<<    //shift stack to the right 3 (end on B)
+
+<               //go to first element of stack 
+]
+
+
+
+//2: input into left_stack 
+
+,
+[
+[<,]>[>]   //input into stack (end on B)
+
+//3: output first letter 
+<.>         //output first letter (end on B)
+
+//4: create val 
++++++++++++++[<----->-]     //subtract first element by 65 (end on B)
+<[>(BD>>)++++++++++++++++(DB<<)<-]  //remove first element; set D to this value times 16 (end on first element)
+<[<]++++++++++[>---------->>----------<<<-] //subtract X and Z elements by 100 (end on first empty)
+>+++>>+++<<                 //add 3 to X and Z elements (end on Z element)
+[>>+++<<-]                  //add 3 times Z element to X element (end on Z element)
+>[-]                        //remove Y element (end on Y element)
+>[<+>-]                     //move X element left one (end on new X element pos)
+<[>>[>]>(BD>>)+(DB<<)<<[<]<-]    //move X element to D (end on X element)
+>>[>]>(BD>>)                //go to D 
+
+
+//5: print index of val in array
+//go to work cell with index *D 
+    >>[-]<<[>>+<<-]>>
+    [[>>+<<-]+>>--]+
+<.                      //print data cell 
+>[<<]                    //go to D 
+
+
+//6: remove all elements in stack 
+(DB<<)<<[<]>[[-]>]>             //end on B 
+
+
+++++++++++.[-]                  //output new line 
+<,
+]

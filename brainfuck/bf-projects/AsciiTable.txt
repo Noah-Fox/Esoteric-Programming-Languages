@@ -1,0 +1,83 @@
+//fill left_stack with row values 
+-[[>+<-]>-]      //go to C 
+++++++++[(CD>)++++++(DE>)+(EC<<)-] //set D to 48; E to 8 (end on C)
+(CD>)--                     //set D to 46
+(DE>)++                    //set E to 10 
+(EG>>)++                    //set G to 2
+[                   //while G 
+(GE<<)
+[                   //while E 
+(EB<<<)[<]+[>]          //set first empty element of left_stack to 1 (end on C)
+(CD>)+[(DF>>)+(FB<<<<)[<]>+[>](CD>)-]     //decrement D; move D onto stack and to F 
+(DF>>)[(FD<<)+(DF>>)-]  //move F to D (end on F)
+(FE<)-              //decrement E 
+]
+(ED<)+++++++        //set D to 64 
+(DE>)++++++         //set E to 6 
+(EG>>)-              //decrement G 
+]
+
+//add first two rows to right_stack 
+(GL>>>>)>>++++++++[<<++++>++++>-]<[<]   //add two spaces to stack (end on K)
+(KG<<<)++++++++[(GF<)++++(FD<<)----(DG>>>)-]       //set F to 32 and D to 44 (end on G)
+(GF<)-                  //set F to 31
+(FD<<)++++             //set D to 48 
+(DE>)[                  //while E 
+(EL>>>>>>)[>]+[<]      //set first empty element of stack to 1 (end on K)
+(KF<<<<)[(FG>)+(GL>>>>)[>]<+[<](KF<<<<)-]  //move F onto stack and to G (end on F)
+(FG>)[(GF<)+(FG>)-]     //move G to F (end on G)
+(GL>>>>)[>]+[<]        //set first empty element of stack to 1 (end on K)
+(KD<<<<<<)+            //increment D 
+[(DC<)+(CL>>>>>>>>)[>]<+[<](KD<<<<<<)-]   //move D to stack and C (end on D)
+(DC<)[(CD>)+(DC<)-]     //move C to D (end on C)
+(CE>>)-                 //decrement E 
+]
+//second row 
+(EL>>>>>>)[>]++++++++++>+[<]   //add 10 and 1 to stack (end on K)
+(KF<<<<)[(FG>)+(GL>>>>)[>]<+[<](KF<<<<)-] //move F onto stack and to G (end on F)
++++[(FE<)++++(ED<)---(DF>>)-]   //set D to 45 and E to 12 (end on F)
+(FD<<)-                         //set D to 44
+(DE>)+                          //set E to 13
+[                       //while E 
+(EL>>>>>>)[>]+[<]      //add 1 to stack (end on K)
+(KD<<<<<<)[(DF>>)+(FL>>>>>)[>]<+[<](KD<<<<<<)-]  //move D to F and onto stack (end on D)
+(DF>>)[(FD<<)+(DF>>)-]  //move F to D (end on F)
+(FE<)-                  //decrement E 
+]
+
+
+
+//prepare work cells for remaining rows 
+(EG>>)[(GF<)+(FE<)+(EG>>)-]     //move G(31) to E and F (end on G) 
+(GC<<<<)+++[(CD>)++++(DC<)-]    //set D to 56 (end on C)
+(CD>)+                          //set D to 57 (end on D)
+
+
+//add remaining rows to stack 
+(DB<<)
+[                   //while B (while left_stack is not empty)
+(BL>>>>>>>>>)[>]++++++++++>+[<]        //add 10 and 1 to right_stack (end on K)
+(KB<<<<<<<<)-[(BL>>>>>>>>>)[>]<+[<](KB<<<<<<<<)-]    //move first element of left_stack to right_stack (end on B)
+(BL>>>>>>>>>)[>]+[<]   //add 1 to right_stack (end on K)
+(KD<<<<<<)[(DG>>>)+(GL>>>>)[>]<+[<](KD<<<<<<)-]      //move D to G and onto right_stack (end on D)
+(DG>>>)[(GD<<<)+(DG>>>)-]   //move G to D (end on G)
+(GF<)[(FG>)+(GH>)+(HF<<)-]  //copy F to G and H (end on F)
++(FH>>)[(HF<<)+(FH>>)-]     //move H to F; increment F (end on H)
+++++++                      //set H to 6
+[                           //while H 
+//add space to right_stack 
+(HL>>>)[>]>++++[<++++++++>-]+[<]       //add 32 and 1 to right_stack (end on K)
+(KG<<<)[(GI>>)+(IL>>)[>]<+[<](KG<<<)-]   //move G to I and onto stack (end on G)
+(GI>>)[(IG<<)+(GI>>)-]                  //move I to G (end on I)
+++++[(IG<<)++++(GI>>)-]                 //add 16 to G (end on I)
+(IH<)-                      //decrement H 
+]
+(HG<)[-]                    //set G to 0 (end on G)
+(GB<<<<<)<[[>+<-]<]>>[>](CB<)   //move left_stack to the right (end on B)
+]
+
+
+(BL>>>>>>>>>)[>]<[-]       //remove last element of right_stack (end on first empty element)
+>>>++++++++++++++[<+++++<+++++<+++++>>>-]   //add 70 to stack 3 times (end on first empty element)
+<++++++<-<--[<]             //change last 3 elements to 68; 69; and 76 (end on K)
+>[.>]

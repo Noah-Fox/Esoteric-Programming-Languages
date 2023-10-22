@@ -1,0 +1,270 @@
+//phase_a: input; if lowercase make capital; determine if letter 
+
+++++++++++++++++
+[(AB>)++++(BC>)++++(CD>)++++(DE>)++++(EA<<<<)-] //set B; C; D; and E to 64 (end on A)
++++++++++[(AB>)+++(BC>)+++(CE>>)+++(EA<<<<)-]   //set B; C; and E to 91 (end on A)
+++++++++[(AC>>)++++(CA<<)-]                 //set C to 123 (end on A)
+(AB>)+++++                                  //set B to 96 (end on B)
+
+(BM>>>>>>>>>>>)                 //go to M 
+++++++[(ML<)++++(LM>)-](ML<)++      //set L to 26 (end on L)
+[[>>+<<-]>>->+<]>[<<]               //create letter array (end on M)
+
+
+(MA<<<<<<<<<<<<)         //go to A 
+,                       //input to A 
+[                       //while A 
+[                       //while A 
+
+// #### make copy of char and add it to sentence storage 
+
+[(AF>>>>>)+(FG>)+(GA<<<<<<)-]   //copy A to F and G (end on A)
+(AF>>>>>)[(FA<<<<<)+(AF>>>>>)-]     //move F to A (end on F)
+(FG>)[(GM>>>>>>)+(MG<<<<<<)-]       //move G to M (end on G)
+(GM>>>>>>)                          //go to M 
+//move *M from array_port to landing_cell_1 
+    >>[[-]<<[>>+<<-]]>>
+    >>[[-]<<[>>+<<-]+>>>>]
+    <<[>>+<<-]+>>           //end on O 
+
+(OR>>>)[>]                  //go to first empty cell after sentence storage 
+<[[>+<-]<]                  //move every value in sentence storage to the right one (end on Q)
+(QO<<)[(OR>>>)+(RO<<<)-]    //move O to R (end on O)
+<<[<<]                      //move across array (end on M)
+(MA<<<<<<<<<<<<)            //end on A 
+
+
+
+//set F to (*A greater than *B)     (A0;B1;F5;G6;H7;I8)
+    [(AF>>>>>)+(FG>)+(GA<<<<<<)-]     //copy A to F and G (end on A)
+    (AG>>>>>>)[(GA<<<<<<)+(AG>>>>>>)-]   //move G to A (end on G)
+    (GB<<<<<)[(BG>>>>>)+(GH>)+(HB<<<<<<)-] //copy B to G and H (end on B)
+    (BH>>>>>>)[(HB<<<<<<)+(BH>>>>>>)-]      //move H to B (end on H)
+
+    //decrement F and G until one is 0
+    +[                          //set H to 1; while H
+    [-]                         //set H to 0
+    (HG<)-(GF<)-                 //decrement F and G (end on F)
+
+    //set H to *F && *G
+        //if F; add 1 to H (F:F; G:I;)
+            [(FH>>)+(HF<<)[(FI>>>)+(IF<<<)-]]
+            (FI>>>)[(IF<<<)+(FI>>>)-]
+        (IG<<)
+
+        //if G; add 1 to H (F:G; G:I;)
+            [(GH>)+(HG<)[(GI>>)+(IG<<)-]]
+            (GI>>)[(IG<<)+(GI>>)-]
+        (IH<)[(HI>)+>+<(IH<)-]     //copy H to I and I1 (end on H)
+        (HI>)               //go to I
+        //if I; subtract I1 by 1
+            [>-<[-]]        //set I to 0 (end on I)
+        >[<(IH<)+(HI>)>-]   //copy I1 to H (end on I1)
+        <(IH<)              //end on H
+    ]
+    (HG<)[-](GF<)               //set G to 0 (end on F)
+    [(FG>)+(GF<)[-]]            //if *F; set G to 1; bring F to 0 (end on F)
+    (FG>)[(GF<)+(FG>)-] //move G to F (end on G)
+    (GF<)               //end on F
+
+(FC<<<)                 //go to C 
+//set G to (*C greater than *A)    (C2;A0;G6;H7;I8;J9)
+    [(CG>>>>)+(GH>)+(HC<<<<<)-]     //copy C to G and H (end on C)
+    (CH>>>>>)[(HC<<<<<)+(CH>>>>>)-]   //move H to C (end on H)
+    (HA<<<<<<<)[(AH>>>>>>>)+(HI>)+(IA<<<<<<<<)-] //copy A to H and I (end on A)
+    (AI>>>>>>>>)[(IA<<<<<<<<)+(AI>>>>>>>>)-]      //move I to A (end on I)
+
+    //decrement G and H until one is 0
+    +[                          //set I to 1; while I
+    [-]                         //set I to 0
+    (IH<)-(HG<)-                 //decrement G and H (end on G)
+
+    //set I to *G && *H
+        //if G; add 1 to I (G:G; H:J;)
+            [(GI>>)+(IG<<)[(GJ>>>)+(JG<<<)-]]
+            (GJ>>>)[(JG<<<)+(GJ>>>)-]
+        (JH<<)
+
+        //if H; add 1 to I (G:H; H:J;)
+            [(HI>)+(IH<)[(HJ>>)+(JH<<)-]]
+            (HJ>>)[(JH<<)+(HJ>>)-]
+        (JI<)[(IJ>)+>+<(JI<)-]     //copy I to J and J1 (end on I)
+        (IJ>)               //go to J
+        //if J; subtract J1 by 1
+            [>-<[-]]        //set J to 0 (end on J)
+        >[<(JI<)+(IJ>)>-]   //copy J1 to I (end on J1)
+        <(JI<)              //end on I
+    ]
+    (IH<)[-](HG<)               //set H to 0 (end on G)
+    [(GH>)+(HG<)[-]]            //if *G; set H to 1; bring G to 0 (end on G)
+    (GH>)[(HG<)+(GH>)-] //move H to G (end on H)
+    (HG<)               //end on G
+
+(GF<)                   //go to F 
+//set H to (*F and *G)      (F5;G6;H7;I8)
+    //if F; add 1 to H (F:F; G:I;)
+        [(FH>>)+(HF<<)[(FI>>>)+(IF<<<)-]]
+        (FI>>>)[(IF<<<)+(FI>>>)-]
+    (IG<<)
+
+    //if G; add 1 to H (F:G; G:I;)
+        [(GH>)+(HG<)[(GI>>)+(IG<<)-]]
+        (GI>>)[(IG<<)+(GI>>)-]
+    (IH<)[(HI>)+>+<(IH<)-]     //copy H to I and I1 (end on H)
+    (HI>)               //go to I
+    //if I; subtract I1 by 1
+        [>-<[-]]        //set I to 0 (end on I)
+    >[<(IH<)+(HI>)>-]   //copy I1 to H (end on I1)
+    <(IH<)              //end on H
+
+(HF<<)[-](FG>)[-](GH>)      //set F and G to 0 (end on H)
+
+
+//if H; set F to 32; bring F to 0 and A down same amount; set H to 0
+[
+    (HG<)++++++++[(GF<)++++(FG>)-]      //set F to 32 (end on G)
+    (GF<)[(FA<<<<<)-(AF>>>>>)-]         //bring F to 0; A down same amount (end on F)
+    (FH>>)                              //go to H 
+    [-]         //bring H to 0 
+]
+
+
+(HA<<<<<<<)
+//set F to (*A greater than *D)     (A0;D3;F5;G6;H7;I8)
+    [(AF>>>>>)+(FG>)+(GA<<<<<<)-]     //copy A to F and G (end on A)
+    (AG>>>>>>)[(GA<<<<<<)+(AG>>>>>>)-]   //move G to A (end on G)
+    (GD<<<)[(DG>>>)+(GH>)+(HD<<<<)-] //copy D to G and H (end on D)
+    (DH>>>>)[(HD<<<<)+(DH>>>>)-]      //move H to D (end on H)
+
+    //decrement F and G until one is 0
+    +[                          //set H to 1; while H
+    [-]                         //set H to 0
+    (HG<)-(GF<)-                 //decrement F and G (end on F)
+
+    //set H to *F && *G
+        //if F; add 1 to H (F:F; G:I;)
+            [(FH>>)+(HF<<)[(FI>>>)+(IF<<<)-]]
+            (FI>>>)[(IF<<<)+(FI>>>)-]
+        (IG<<)
+
+        //if G; add 1 to H (F:G; G:I;)
+            [(GH>)+(HG<)[(GI>>)+(IG<<)-]]
+            (GI>>)[(IG<<)+(GI>>)-]
+        (IH<)[(HI>)+>+<(IH<)-]     //copy H to I and I1 (end on H)
+        (HI>)               //go to I
+        //if I; subtract I1 by 1
+            [>-<[-]]        //set I to 0 (end on I)
+        >[<(IH<)+(HI>)>-]   //copy I1 to H (end on I1)
+        <(IH<)              //end on H
+    ]
+    (HG<)[-](GF<)               //set G to 0 (end on F)
+    [(FG>)+(GF<)[-]]            //if *F; set G to 1; bring F to 0 (end on F)
+    (FG>)[(GF<)+(FG>)-] //move G to F (end on G)
+    (GF<)               //end on F
+
+
+(FE<)
+//set G to (*E greater than *A)     (E4;A0;G6;H7;I8;J9)
+    [(EG>>)+(GH>)+(HE<<<)-]     //copy E to G and H (end on E)
+    (EH>>>)[(HE<<<)+(EH>>>)-]   //move H to E (end on H)
+    (HA<<<<<<<)[(AH>>>>>>>)+(HI>)+(IA<<<<<<<<)-] //copy A to H and I (end on A)
+    (AI>>>>>>>>)[(IA<<<<<<<<)+(AI>>>>>>>>)-]      //move I to A (end on I)
+
+    //decrement G and H until one is 0
+    +[                          //set I to 1; while I
+    [-]                         //set I to 0
+    (IH<)-(HG<)-                 //decrement G and H (end on G)
+
+    //set I to *G && *H
+        //if G; add 1 to I (G:G; H:J;)
+            [(GI>>)+(IG<<)[(GJ>>>)+(JG<<<)-]]
+            (GJ>>>)[(JG<<<)+(GJ>>>)-]
+        (JH<<)
+
+        //if H; add 1 to I (G:H; H:J;)
+            [(HI>)+(IH<)[(HJ>>)+(JH<<)-]]
+            (HJ>>)[(JH<<)+(HJ>>)-]
+        (JI<)[(IJ>)+>+<(JI<)-]     //copy I to J and J1 (end on I)
+        (IJ>)               //go to J
+        //if J; subtract J1 by 1
+            [>-<[-]]        //set J to 0 (end on J)
+        >[<(JI<)+(IJ>)>-]   //copy J1 to I (end on J1)
+        <(JI<)              //end on I
+    ]
+    (IH<)[-](HG<)               //set H to 0 (end on G)
+    [(GH>)+(HG<)[-]]            //if *G; set H to 1; bring G to 0 (end on G)
+    (GH>)[(HG<)+(GH>)-] //move H to G (end on H)
+    (HG<)               //end on G
+
+
+(GF<)
+//set H to (*F and *G)      (F5;G6;H7;I8)
+    //if F; add 1 to H (F:F; G:I;)
+        [(FH>>)+(HF<<)[(FI>>>)+(IF<<<)-]]
+        (FI>>>)[(IF<<<)+(FI>>>)-]
+    (IG<<)
+
+    //if G; add 1 to H (F:G; G:I;)
+        [(GH>)+(HG<)[(GI>>)+(IG<<)-]]
+        (GI>>)[(IG<<)+(GI>>)-]
+    (IH<)[(HI>)+>+<(IH<)-]     //copy H to I and I1 (end on H)
+    (HI>)               //go to I
+    //if I; subtract I1 by 1
+        [>-<[-]]        //set I to 0 (end on I)
+    >[<(IH<)+(HI>)>-]   //copy I1 to H (end on I1)
+    <(IH<)              //end on H
+
+
+(HF<<)[-](FG>)[-](GH>)      //set F and G to 0 (end on H)
+
+//if H; subtract A by 65; move to letter array port; increment element *A; set H to 0 
+[
+    
+    (HD<<<<)[(DF>>)+(FG>)+(GD<<<)-]     //copy D to F and G (end on D)
+    (DG>>>)[(GD<<<)+(DG>>>)-]           //move G to D (end on G)
+    (GF<)+                              //increment F to 65 
+    [(FA<<<<<)-(AF>>>>>)-]              //bring F to 0; A down same amount (end on F)
+    (FA<<<<<)[(AM>>>>>>>>>>>>)+(MA<<<<<<<<<<<<)-]    //move A to M (end on A)
+    (AM>>>>>>>>>>>>)                    //go to M (letter array port)
+
+    //port_locate; bring pointer to work cell of index *M 
+        >>[-]<<[>>+<<-]>>
+        [[>>+<<-]+>>--]+
+    <+>[<<]             //increment data cell; go to port (end on M)
+
+    (MH<<<<<)
+
+
+    [-]                 //set H to 0 
+]
+
+(HA<<<<<<<)
+
+
+[-],                    //set A to 0 and input 
+]
+
+(AM>>>>>>>>>>>>)        //go to M 
+>[>>]                   //go to first data cell; go right until an empty data cell or landing_cell_0 is reached 
+>[[>>]<->]              //bring pointer to landing_cell_1 (end on O)
+                        //if it didn't make it through array; set landing_cell_0 to ~1 
+(ON<)+                  //go to N; increment it 
+
+
+
+//if N; go to end of sentence storage; print element in reverse; set N to 0
+[
+(NR>>>>)                //go to R 
+[>]                     //go to first empty cell after sentence storage 
+<[.<]                   //print every element in sentence storage (end on Q) 
+++++++++++.[-]          //print new line 
+(QN<<<)[-]              //set N to 0 
+]
+
+(NR>>>>)[>]<[[-]<]      //set every cell in sentence storage to 0 (end on Q)
+
+(QO<<)<<[<[-]<]         //set every data cell in array to 0 (end on M) 
+
+(MA<<<<<<<<<<<<)        //go to A 
+
+,]

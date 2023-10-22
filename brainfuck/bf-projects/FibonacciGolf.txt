@@ -1,0 +1,163 @@
+//begin on cell M 
+//M is used to keep track of how many times the sequence is done 
+
+//use 3 6_digit bcd_arrays
+//ports for each are A; E; and I 
+
+(MA>)++++++
+bcd_instantiate(A1) (end on A)
+    [>>+<<-]>>++
+    [>+<[>>>+<<<-]>>>-]
+    <<[<<<]>>>>>>
+    [<---------->>>>]
+    <<<[<<<]
+
+>>>[>>>]        //go to D 
+(DE>)++++++
+bcd_instantiate(E1) (end on E)
+    [>>+<<-]>>++
+    [>+<[>>>+<<<-]>>>-]
+    <<[<<<]>>>>>>
+    [<---------->>>>]
+    <<<[<<<]
+
+>>>[>>>]        //go to H 
+(HI>)++++++
+bcd_instantiate(I1) (end on I)
+    [>>+<<-]>>++
+    [>+<[>>>+<<<-]>>>-]
+    <<[<<<]>>>>>>
+    [<---------->>>>]
+    <<<[<<<]
+
+
+(IF<<<)<<+>>        //set arr_1 to 1 (end on F)
+<[<<<](ED<)<<<[<<<]              //go to A 
+++++++[<+++++>-]<+  //set M to 31 (end on M)
+
+[               //while M 
+(MA>)
+
+//print arr_0 
+//bcd_output(A1)
+    >>>>>>>>>       //go to Z_cell of elem_0
+    [
+    <++++++++++     //convert to num mode (end on Y)
+    [<+>-]          //move Y to X (end on Y)
+    >[-]<<          //set Z to 0 (end on X)
+    [>>+<<[>+<-]]   //if digits is not 0; set Z to 1; move X to Y (end on X)
+    >>[<<+>>-]     //move Z to X (end on Z)
+    +++++[<++++++++++>-]<--     //convert to char mode (end on Y)
+    >+>>>           //set Z to 1; go to next cell
+    ]
+    <<<[<<<]        //go to A
+    >>>[<<[>.>>[-]+<<<[-]]>>>>>]    //print all elements that are not leading zeros (end on landing_cell_2)
+    //if landing_cell_0 is 1; then a number was printed; if not; '0' needs to be printed
+    <<>+<[>-<[-]]>[<+>-]<       //bit_flip landing_cell_0
+    [++++[>++++++++++<-]>--.[-]<] //if landing_cell_0; print '0'
+    <[<<<]                      //return to A
+    >>>>>>>>>[+++++++++[<------>-]<++>+>>>]<<<[<<<]  //convert back to incremental mode (end on A)
+
+++++++++++.[-]      //print new line 
+
+//set arr_2 to arr_1
+>>>[>>>]            //go to D 
+(DE>)>>>>>>>>>[<<+>>>>>]    //set every X_cell in arr_1 to 1 (end on H)
+(HI>)>>>>>>>>>[<<+>>>>>]    //set every X_cell in arr_2 to 1 (end on L)
+<<<[<<<](IH<)               //go to H 
+<<<<<[                  //while the X_cell of last element in arr_1 is 1 
+[<<<]>>>-               //set X_cell of target element to 0 (end on X)
+>>-<[<->>-<+]           //move Y to X and Z (end on Y)
+<[>-<+]                 //move X to Y (end on X)
+>>>[>>>](FI>>>)>>>[>>>](LJ<<)       //go to J 
+<<<[<<<]>>>-            //remove first occuring 1 in an X_cell in arr_2 (end on X)
+>[+]                    //set arr_2 Y_cell to 0 (end on Y)
+>[<<<](IF<<<)<<<[<<<]  //go to arr_1 target X_cell 
+>>[                     //while arr_1 target Z_cell 
+    >[>>>](FI>>>)>>>[>>>](LJ<<)<<<[<<<]>-   //decrement arr_2 target Y_cell (end on arr_2 target Y)
+    >[<<<](IF<<<)<<<[<<<]>>+                //increment arr_1 target Z_cell (end on Z)
+]
++[>>>](HF<<)<<<     //go to X_cell of last element in arr_1 
+]
+>>[<<<]             //go to E  
+
+
+//while arr_0; increment arr_1; decrement arr_0 
+(ED<)<<<[<<<]       //go to A 
+>>>>>>>>>[<+++++++++++>>>>]<<<[<<<]     //change arr_0 from incremental to decremental mode (end on A)
+//bcd_truth_value(A1)   //set A to arr_0 truth value 
+    >>>>>>>>>[<[<+>>+<-]<#-#>>[<+>-]<->+>>>] //set every X_cell to num val of digit (end on landing_cell_2)
+    <<<<<<[>[<<<+>>>-]<<<<]     //bring sum of digits to X_cell of buffer_0 (end on A)
+    >[[-]<+>]<                  //if sum is not 0; set A to 1 (end on A)
+
+[                       //while A 
+[-]                     //set A to 0
+>>>[>>>](DE>)           //go to E 
+//bcd_increment(E1) //increment arr_1 
+    >>>[>>>]<<<<<+                        //set X_cell of last element to 1
+    [                                       //while X_cell of current element is 1
+    [-]>+                                   //set X to 0; increment Y (end on Y)
+    >[-]                                //set Z to 0
+    <[<+>>+<-]              //move Y to X and Z (end on Y)
+    <
+    //bit_flip X (end on X)
+        >+<[>-<[-]]>[<+>-]<
+    >>[<+>-]+                   //move Z to Y; set Z to 1 (end on Z)
+    <<[>----------<[-]<<<+>>>]  //if *X; set Y to ~10; set X to 0; set prev_X to 1 (end on X)
+    <<<                 //go to prev_X
+    ]
+    >>[<<<]             //go to E
+    >>[-]>>>[-]>[<<<]        //set Y_cell of buffer_0 and buffer_1 to 0 (end on E)
+
+(ED<)<<<[<<<]           //go to A 
+//bcd_decrement(A1) //decrement arr_0 
+    >>>[>>>]<<<<<+                        //set X_cell of last element to 1
+    [                                       //while X_cell of current element is 1
+    [-]>-                                   //set X to 0; decrement Y (end on Y)
+    >[-]                                //set Z to 0
+    <[<+>>+<-]              //move Y to X and Z (end on Y)
+    <
+    //bit_flip X (end on X)
+        >+<[>-<[-]]>[<+>-]<
+    >>[<+>-]+                   //move Z to Y; set Z to 1 (end on Z)
+    <<[>++++++++++<[-]<<<+>>>]  //if *X; set Y to ~10; set X to 0; set prev_X to 1 (end on X)
+    <<<                 //go to prev_X
+    ]
+    >>[<<<]             //go to A
+    >>[-]>>>[-]>[<<<]        //set Y_cell of buffer_0 and buffer_1 to 0 (end on A)
+
+//bcd_truth_value(A1)   //set A to arr_0 truth value 
+    >>>>>>>>>[<[<+>>+<-]<#-#>>[<+>-]<->+>>>] //set every X_cell to num val of digit (end on landing_cell_2)
+    <<<<<<[>[<<<+>>>-]<<<<]     //bring sum of digits to X_cell of buffer_0 (end on A)
+    >[[-]<+>]<                  //if sum is not 0; set A to 1 (end on A)
+
+
+]
+
+//set arr_0 to arr_2; arr_2 to 0
+>>>>>>>>>[<----------->>>>]<<<[<<<]     //change arr_0 from decremental to incremental mode (end on A)
+>>>>>>>>>[<<+>>>>>]                     //set X_cells in arr_0 to 1 (end on A)
+>>>[>>>](DE>)>>>[>>>](HI>)              //go to I 
+>>>>>>>>>[<<+>>>>>]                     //set X_cells in arr_2 to 1 (end on L)
+(LJ<<)<<<[                              //while last X_cell in arr_2 
+    [<<<]>>>-                           //set first 1 X_cell (target) in arr_2 to 0 
+    >>-<[>-<+]                          //move Y to Z (end on Y)
+    ----------                          //set Y to ~10 
+    <<[<<<](IH<)<<<[<<<](EB<<<)<<<[<<<]>>>-  //set first 1 X_cell in arr_0 to 0 (end on X)
+    >[+]                                //set arr_0 target Y_cell to 0 
+    >>[>>>](BE>>>)>>>[>>>](HI>)>>>[>>>](LJ<<)<<<[<<<]  //go to arr_2 target X 
+    >>[                                 //while arr_2 target Z 
+        [<<<](IH<)<<<[<<<](EB<<<)<<<[<<<]>-    //decrement arr_0 target Y (end on Y)
+        >[>>>](DE>)>>>[>>>](HI>)>>>[>>>](LJ<<)<<<[<<<]  //go to arr_2 target X 
+        >>+                                     //increment arr_2 target Z (end on Z)
+    ]
+    +>[>>>]<<<                          //go to last X_cell in arr_2 
+]
+>>[<<<]                 //go to I 
+
+
+
+
+(IH<)<<<[<<<](ED<)<<<[<<<](AM<)-        //decrement M 
+
+]

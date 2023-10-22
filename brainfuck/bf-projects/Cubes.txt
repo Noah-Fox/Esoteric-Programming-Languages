@@ -1,0 +1,150 @@
+//Code Golf; output 7 cubes 
+//use a len_6; 5_cell array to store output codes 
+
+
+
+>>>>>+>>>>>+>>>>>+>>>>>+>>>>>+>>>>>+>>>>>       //instantiate array (end on M)
+
++++++[(MN>)+++++(NM<)-]                 //set N to 25 (end on M)
+//set c_cell of each element to 225 and b_cell and a_cell to 150 (end on N)
+    (MN>)[(NM<)(X<<<<<)[>++++++>++++++>+++++++++<<<(X<<<<<)](X>>>>>)[(X>>>>>)](MN>)-]   
+
+//elem_0 
+(NM<)<<[-]<[-]<[-]      //clear data cells (end on c_cell)
+>++++++++[<++++>-]      //set c_cell to 32 (end on b_cell)
+<<                      //go to elem_0 work cell 
+
+//elem_1
+<<[-]<[-]<[-]++++++++++<    //clear cells; set c_cell to 10 (end on elem_1 work cell)
+
+//elem_2
+<<+                          //set a_cell to 226 (end on a_cell)
+<<--------------<           //set c_cell to 136 (end on elem_2 work cell)
+
+//elem_3
+<<+<--                      //set a_cell to 226 and b_cell to 148 (end on b_cell)
+<----------------------<    //set c_cell to 128 (end on elem_3 work cell)
+
+//elem_4
+<<+<-                       //set a_cell to 226 and b_cell to 149 (end on b_cell)
+<+++++++++++++++++++++++++++<         //set c_cell to 177 (end on elem_4 work cell)
+
+//elem_5
+<<+<--                      //set a_cell to 226 and b_cell to 148 (end on b_cell)
+<--------------------<      //set c_cell to 130 (end on elem_5 work cell)
+
+[(X>>>>>)]                  //go to M 
+
+
+
+
+(MA>>)+++++++          //set A to 7 (end on A)
+[                       //while A 
+
+[(AB>)-(BC>)+(CA<<)-]   //move A to ~B and C (end on A)
+(AC>>)[(CA<<)+(AC>>)-]  //move C to A (end on C)
+(CB<)++++++++           //add 8 to B (end on B)
+
+//section 1
+[(BC>)+(CD>)+(DE>)++++(EB<<<)-]     //move B to C; D; and 4 times to E (end on B)
+(BD>>)+                 //increment D (end on D)
+[(DG>>>)[>]+[<](FD<<)-]     //add 1 to stack *D times (end on D)
+(DG>>>)[>]+++[<]            //add 3 to stack (end on F)
+(FE<)[(EG>>)[>]++++[<](FE<)-]   //add 4 to stack *E times (end on E)
+(EG>>)[>]+++>++[<]          //add 3 and 2 to stack (end on F)
+
+//section 2
+(FC<<<)[(CB<)+(BD>>)+(DE>)++++(EF>)+(FC<<<)-]      //move C to B; D; F; and 4 times to E (end on C)
+(CF>>>)[(FC<<<)+(CF>>>)-]                           //move F to C (end on F)
+(FC<<<)[                      //while C 
+(CD>)[(DG>>>)[>]+[<](FD<<)-]   //add 1 to stack *D times (end on D)
+(DG>>>)[>]+++++[<]              //add 5 to stack (end on F)
+(FE<)[(EG>>)[>]+[<](FE<)-]      //add 1 to stack *E times (end on E)
+(EG>>)[>]+++++[<]               //add 5 to stack (end on F)
+(FC<<<)[(CD>)-(DE>)+(EC<<)-]    //move C to ~D and E (end on C)
+(CE>>)[(EC<<)+(CE>>)-]          //move E to C (end on E)
+(EB<<<)[(BD>>)+(DE>)++++(EF>)+(FB<<<<)-]    //move B to D; F; and 4 times to E (end on B)
+(BF>>>>)[(FB<<<<)+(BF>>>>)-]    //move F to B (end on F)
+(FD<<)[(DG>>>)[>]+[<](FD<<)-]   //add 1 to stack *D times (end on D)
+(DC<)[(CD>)+(DF>>)+(FC<<<)-]    //move C to D and F (end on C)
+(CF>>>)[(FC<<<)+(CF>>>)-]       //move F to C (end on F)
+(FG>)[>]++++++>++[<]            //add 6 and 2 to stack (end on F)
+(FD<<)-                         //decrement D 
+(DC<)-                        //decrement C 
+]
+
+//section 3 
+(CG>>>>)[>]+++[<]           //add 3 to stack (end on F)
+(FE<)[(EG>>)[>]++++[<](FE<)-]   //add 4 to stack *E times (end on E)
+(EG>>)[>]+++[<]             //add 3 to stack (end on F)
+(FB<<<<)[(BC>)+(CD>)+(DB<<)-]   //move B to C and D (end on B)
+(BC>)[(CB<)+(BC>)-]             //move C to B (end on C)
+(CD>)[(DG>>>)[>]+[<](FD<<)-]    //add 1 to stack *D times (end on D)
+(DG>>>)[>]++++++>++[<]      //add 6 and 2 to stack (end on F)
+
+//section 4
+(FB<<<<)[(BC>)+(CD>)+(DE>)++++(EF>)+(FB<<<<)-]  //move B to C; D; F; and 4 times to E (end on B)
+(BC>)-                      //decrement C 
+(CF>>>)[(FB<<<<)+(BF>>>>)-] //move F to B (end on F)
+(FC<<<)[                    //while C 
+(CG>>>>)[>]++++++[<]        //add 6 to stack (end on F)
+(FE<)[(EG>>)[>]+[<](FE<)-]  //add 1 to stack *E times (end on E)
+(EG>>)[>]++++++[<]          //add 6 to stack (end on F)
+(FD<<)[(DG>>>)[>]+[<](FD<<)-]   //add 1 to stack *D times (end on D)
+(DG>>>)[>]++++++>++[<]      //add 6 and 2 to stack (end on F)
+(FB<<<<)[(BD>>)+(DE>)++++(EF>)+(FB<<<<)-]   //move B to D; F; and 4 times to E (end on B)
+(BF>>>>)[(FB<<<<)+(BF>>>>)-]    //move F to B (end on F)
+(FC<<<)-                    //decrement C 
+]
+
+//section 5
+(CG>>>>)[>]++++++[<]        //add 6 to stack (end on F)
+(FE<)[(EG>>)[>]+[<](FE<)-]  //add 1 to stack *E times (end on E)
+(EG>>)[>]++++++[<]          //add 6 to stack (end on F)
+(FD<<)[(DG>>>)[>]+[<](FE<)++++(EC<<)+(EF>)-]    //add 1 to stack *D times; move D to C and 4 times to E (end on D)
+(DG>>>)[>]+++>++[<]         //add 3 and 2 to stack (end on F)
+
+//section 6
+(FC<<<)[                //while C 
+(CG>>>>)[>]++++++[<]    //add 6 to stack (end on F)
+(FE<)[(EG>>)[>]+[<](FE<)-]  //add 1 to stack *E times (end on E)
+(EG>>)[>]++++++[<]      //add 6 to stack (end on F)
+(FC<<<)[(CD>)+(DE>)+(EC<<)-]    //move C to D and E (end on C)
+(CD>)-                  //decrement D 
+(DE>)[(EC<<)+(CE>>)-]   //move E to C (end on E)
+(ED<)[(DG>>>)[>]+[<](FD<<)-]    //add 1 to stack *D times (end on D)
+(DG>>>)[>]+++++>++[<]           //add 5 and 2 to stack (end on F)
+(FB<<<<)[(BD>>)+(DE>)++++(EB<<<)-]    //move B to D and 4 times to E (end on B)
+(BD>>)[(DB<<)+(BD>>)-]      //move D to B (end on D)
+(DC<)-                  //decrement C 
+]
+
+//section 7
+(CG>>>>)[>]+++[<]       //add 3 to stack (end on F)
+(FE<)[(EG>>)[>]++++[<](FE<)-]   //add 4 to stack *E times (end on E)
+(EG>>)[>]+++>++>++[<]   //add 3 and 2 twice to stack (end on F)
+
+
+
+
+
+
+
+(FB<<<<)[-]             //clear B 
+(BA<)-                 //decrement A 
+]
+
+(AG>>>>>>)[             //while G 
+
+[(GM<<<<<<<<)+(MG>>>>>>>>)-]        //move G to M (end on G)
+(GM<<<<<<<<)-                       //decrement M (end on M)
+
+//go to index *M
+    (X<<<<<)[-](X>>>>>)[(X<<<<<)+(X>>>>>)-](X<<<<<)
+    [[(X<<<<<)+(X>>>>>)-]+(X<<<<<)--]+
+[-]>[>]<[.<]+                       //print data cells (end on work cell)
+[(X>>>>>)]                          //go to M 
+(MG>>>>>>>>)
+>[[<+>-]>]                          //shift stack left one 
+<<[<]>                               //go to G 
+]

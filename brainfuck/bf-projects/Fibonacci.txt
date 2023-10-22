@@ -1,0 +1,198 @@
+(AB>)++++++++[(BA<)+++++++(AB>)-](BA<)+++       //set A to 59 (';') (end on A)
+
+
+//input number of how many values of the sequence to use to B (A0;B1;C2;D3;E4;F8;G9;H10)
+//number must end in a semicolon 
+    (AD>>>)+
+    [                   //while D 
+    [-]                 //set D to 0
+    (DC<),              //input to C (end on C)
+
+    (CA<<)              //got to A
+
+    //set D to (A equals C)
+        [(AD>>>)+(DE>)+(EA<<<<)-]     //copy A to D and E (end on A)
+        (AE>>>>)[(EA<<<<)+(AE>>>>)-]   //move E to A (end on E)
+        (EC<<)[(CE>>)+(EF>>>>)+(FC<<<<<<)-] //copy C to E and F (end on C)
+        (CF>>>>>>)[(FC<<<<<<)+(CF>>>>>>)-]      //move F to C (end on F)
+
+        //decrement D and E until one is 0
+        +[                          //set F to 1; while F
+        [-]                         //set F to 0
+        (FE<<<<)-(ED<)-                 //decrement D and E (end on D)
+
+        //set F to *D && *E
+            //if D; add 1 to F (D:D; E:G;)
+                [(DF>>>>>)+(FD<<<<<)[(DG>>>>>>)+(GD<<<<<<)-]]
+                (DG>>>>>>)[(GD<<<<<<)+(DG>>>>>>)-]
+            (GE<<<<<)
+
+            //if E; add 1 to F (D:E; E:G;)
+                [(EF>>>>)+(FE<<<<)[(EG>>>>>)+(GE<<<<<)-]]
+                (EG>>>>>)[(GE<<<<<)+(EG>>>>>)-]
+            (GF<)[(FG>)+>+<(GF<)-]     //copy F to G and G1 (end on F)
+            (FG>)               //go to G
+            //if G; subtract G1 by 1
+                [>-<[-]]        //set G to 0 (end on G)
+            >[<(GF<)+(FG>)>-]   //copy G1 to F (end on G1)
+            <(GF<)              //end on F
+        ]
+        (FD<<<<<)
+        //set F to (D or E)
+            //if D; add 1 to F
+                [(DF>>>>>)+(FD<<<<<)[(DG>>>>>>)+(GD<<<<<<)-]]
+                (DG>>>>>>)[(GD<<<<<<)+(DG>>>>>>)-]
+            (GE<<<<<)
+            //if E; add 1 to F
+                [(EF>>>>)+(FE<<<<)[(EG>>>>>)+(GE<<<<<)-]]
+                (EG>>>>>)[(GE<<<<<)+(EG>>>>>)-]      //move *G back to *E
+            (GF<)[(FG>)+(GF<)-]     //move F to G (end on F)
+            (FG>)[(GF<)+(FG>)[-]]   //if G; set F to 1; set G to 0 (end on G)
+            (GF<)                   //end on F
+
+        (FE<<<<)[-](ED<)[-]            //set D and E to 0
+        (DF>>>>>)[(FD<<<<<)+(DF>>>>>)-]      //move F to D (end on F)
+        (FD<<<<<)
+        //Glip D
+            (DE>)+(ED<)         //set E to 1 (end at D)
+            [(DE>)-(ED<)[-]]    //if *D; set E to 0; set D to 0
+            (DE>)[(ED<)+(DE>)-]     //move *E to *D
+            (ED<)               //end on D
+
+
+    //flip D
+        (DE>)+(ED<)         //set E to 1 (end at D)
+        [(DE>)-(ED<)[-]]    //if *D; set E to 0; set D to 0
+        (DE>)[(ED<)+(DE>)-]     //move *E to *D
+        (ED<)               //end on D
+
+    //if D
+        [                           //if cell D
+
+            (do something; end at D)    //do something; return to cell D
+            (DE>)++++++[(EC<<)--------(CE>>)-]   //subtract C by 48 (end on E)
+            ++++++++++                  //set E to 10
+            (EB<<<)                     //go to B
+            //set F to (B times E)
+                [(BF>>>>>>>)+(FG>)+(GB<<<<<<<<)-]     //copy B to F and G (end on B)
+                (BF>>>>>>>)[(FB<<<<<<<)+(BF>>>>>>>)-]      //move F to B (end on F)
+                (FG>)[                      //while G
+                -                           //decrement G
+                (GE<<<<<)[(EF>>>>)+(FH>>)+(HE<<<<<<)-]   //copy E to F and H (end on E)
+                (EH>>>>>>)[(HE<<<<<<)+(EH>>>>>>)-]       //move H to E (end on H)
+                (HG<)                       //end on G
+                ]
+                (GF<)                       //end on F
+            (FB<<<<<<<)[-]             //set B to 0
+            (BE>>>)[-]              //set E to 0
+            (EF>>>>)[(FB<<<<<<<)+(BF>>>>>>>)-]    //move F to B (end on F)
+
+            (FC<<<<<<)[(CB<)+(BC>)-]    //move C to B (end on C)
+            (CD>)                   //end on D
+
+
+        [(DE>)+(ED<)-]              //move *D to *E (end on D)
+        ]                           //end while loop
+        (DE>)[(ED<)+(DE>)-]         //move *E back to *D
+        (ED<)                       //end on D
+
+    ]
+
+    (DC<)[-]        //set C to 0
+    (CB<)           //end on B
+
+(BA<)[-]            //set A to 0
+(AB>)[(BA<)+(AB>)-]     //move B to A (end on B)
+(BC>)+                  //set C to 1 
+
+
+
+
+
+(CA<<)[                  //while A 
+-                           //decrement A 
+
+(AB>)
+//output B ******************************
+//set E to digit chars of *B (B1;E4;D3;F8;G9;H10;I11;J12;K13)
+    [(BE>>>)+(ED<)+(DB<<)-]     //copy B to E and D (end on B)
+    (BE>>>)[(EB<<<)+(BE>>>)-]             //move E to B (end on E)
+    (EF>>>>)++++++++++             //set F to 10 (end on F)
+    (FB<<<<<<<)                      //go to B 
+    [                               //while B 
+
+    //divide *B by *F; mod to G; div to H (B;F;G;H;I;J;K)
+        [(BG>>>>>>>>)+(GH>)+(HB<<<<<<<<<)-]     //copy B to G and H (end on B)
+        (BH>>>>>>>>>)[(HB<<<<<<<<<)+(BH>>>>>>>>>)-]   //move H to B (end on H)
+        (HF<<)                      //go to F
+        [(FH>>)+(HI>)+(IF<<<)-]     //copy F to H and I (end on F)
+        (FI>>>)[(IF<<<)+(FI>>>)-]   //move I to F (end on I)
+
+        (IG<<)[                     //while G
+        -(GH>)-                     //decrement G and H (end on H)
+        [(HI>)+(IJ>)+(JH<<)-]       //copy H to I and J (end on H)
+        (HJ>>)[(JH<<)+(HJ>>)-]      //move J to H (end on J)
+
+        (JI<)                   //go to I
+        //flip I
+            (IJ>)+(JI<)         //set J to 1 (end at I)
+            [(IJ>)-(JI<)[-]]    //if *I; set J to 0; set I to 0
+            (IJ>)[(JI<)+(IJ>)-]     //move *J to *I
+            (JI<)               //end on I
+
+        //Kf I; add 1 to K; copy F to H and J; move J to F
+            [                           //if cell I
+                (IK>>)+                 //add 1 to K (end on K)
+                (KF<<<<<)               //go to F
+                [(FH>>)+(HJ>>)+(JF<<<<)-]    //copy F to H and J (end on F)
+                (FJ>>>>)[(JF<<<<)+(FJ>>>>)-]        //move J to F (end on J)
+                (JI<)                   //go to I
+            [(IJ>)+(JI<)-]              //move *I to *J (end on I)
+            ]                           //end while loop
+            (IJ>)[(JI<)+(IJ>)-]         //move *J back to *I
+            (JI<)                       //end on I
+
+        [-]                 //bring I to 0
+
+        (IG<<)              //go to G
+        ]
+
+        (GF<)[(FG>)+(GI>>)+(IF<<<)-]    //copy F to G and I (end on F)
+        (FI>>>)[(IF<<<)+(FI>>>)-]       //move I to F (end on I)
+        (IH<)[(HG<)-(GH>)-]             //bring H to 0; take G with it (end on H)
+        (HK>>>)[(KH<<<)+(HK>>>)-]       //move K to H (end on K)
+        (KG<<<<)                        //end on G
+
+
+    (GB<<<<<<<<)[-]                  //set B to 0
+    (BH>>>>>>>>>)[(HB<<<<<<<<<)+(BH>>>>>>>>>)-]    //move H to B (end on H)
+    ++++++[(HG<)++++++++(GH>)-]     //add 48 to G (end on H)
+    (HG<)[(GE<<<<<)+(EG>>>>>)-]               //move G to E (end on G)
+    (GE<<<<<)>>                                  //go to E2
+    [>+<-]                          //move E2 to E3 (end on E2)
+    <[>+<-]                         //move E1 to E2 (end on E1)
+    <[>+<-]                         //move E to E1 (end on E)
+
+    (EB<<<)               //end while loop on B
+    ]
+    (BF>>>>>>>)[-]       //set F to 0 (end on F)
+    (FD<<<<<)[(DB<<)+(BD>>)-]    //move D to B (end on D)
+    (DB<<)           //end on B
+
+
+(BE>>>)
+[.[-]]              //output and empty E 
+>[.[-]]             //output and empty E1 
+>[.[-]]             //output and empty E2
+>[.[-]]             //output and empty E3 
+<<<                 //go to E 
+++++++++++.[-]      //output new line 
+(EB<<<)          //end on B 
+
+
+[(BD>>)+(DB<<)-]        //move B to D (end on B)
+(BC>)[(CB<)+(BD>>)+(DC<)-]      //move C to B and D (end on C)
+(CD>)[(DC<)+(CD>)-]             //move D to C (end on D)
+
+(DA<<<)                 //end on A 
+]

@@ -1,0 +1,122 @@
+-[[>+<-]>-]     //go to ~cell 255
+
+(AG>>>>>>)++++[(GH>)++++++(HG<)-]   //set H to 24 (end on G)
+(GH>)[>>>>>>+<<<<<<-]>>>>>>[[>>>>>>+<<<<<<-]+>>>>>>-]<<<<<<[<<<<<<]     //create order_array (end on H)
+
+>>>>>+++++      //0
+>>>>>+>++++++   //1
+>>>>>+++++>     //2
+>>>>+>>         //3
+>>>>+++++>>     //4
+>>>+>>>         //5
+>>>+++++>>>+    //6
+>>+>>>>         //7
+>>>>>++++>      //8
+>>>>>+++++++++>++++ //9
+>>>>>>+++++++   //10
+>>>>>> //11
+>>>>++++>>      //12
+>>>>+++++++++>> //13
+>>>>>>  //14
+>>>>>>  //15
+>>>++++>>>  //16
+>>>+++++++++>>>  //17
+>>>>>>  //18
+>>>>>>++ //19
+>>>>>>  //20
+>>>>>>+++    //21
+>[<<<<<<]   //go to H 
+
+,[      //while input to H (every argument)
+[      //while input to H (individual arguments)
+(HG<)++++++++++[(GH>)-------(HG<)-](GH>)+++     //subtract H by 67 (end on H)
+//go to work cell of index *H 
+    >>>>>>[-]<<<<<<[>>>>>>+<<<<<<-]>>>>>>
+    [[>>>>>>+<<<<<<-]+>>>>>>--]+
+-<[<<<<<[<<<<<<](HG<)+(GH>)>>>>>>[>>>>>>]<-]<<<<<[<<<<<<]  //set G to data cell; data cell to 0; work cell to 0 (end on H)
+(HG<)[(GF<)+(FH>>)>>>>>>[>>>>>>]<+<<<<<[<<<<<<](HG<)-] //move G to F and work cell (end on G)
+(GH>)>>>>>>[>>>>>>]+[<<<<<<](HG<)                   //set work cell to 1 (end on G)
+(GF<)[(FA<<<<<)<[<]<+>>[>](AF>>>>>)-]           //move F to second empty cell in input_stack (end on F)
+(FA<<<<<)<[<]<[>+<-]>[>]                        //shift stack addition into place (end on A)
+(AH>>>>>>>),                                    //input to H 
+]
+
+(HA<<<<<<<)<[       //while stack is not empty 
+>(AC>>)[(CD>)+(DE>)+(EC<<)-]    //move C to D and E (end on C)
+(CD>)[(DC<)+(CD>)-]     //move D to C (end on D)
++(DE>)[(ED<)-(DE>)[-]]  //set D to 1; if *E; set D to 0; E to 0 (end on E)
+(ED<)[                  //if D 
+    (DA<<<)<[>(AC>>)+(CA<<)<-]      //move first element to C (end on elem_0)
+    <[[>+<-]<]<[[>+<-]<]>>[>]>[>]    //shift stack (end on A)
+    (AD>>>)[-]                      //set D to 0 (end on D)
+]
+(DA<<<)<[>(AB>)+(BD>>)+(DA<<<)<-]>  //move first element to B and D (end on A)
+(AD>>>)[                //if D
+    (DA<<<)<<[[>+<-]<]<[[>+<-]<]>>[>]>[>]    //shift stack (end on A)
+    (AD>>>)[-]                      //set D to 0 (end on D)
+]
+(DB<<)[(BE>>>)+(EF>)+(FB<<<<)-]     //move B to E and F (end on B)
+(BE>>>)[(EB<<<)+(BE>>>)-]           //move E to B (end on E)
+(EC<<)[(CE>>)+(EG>>)+(GC<<<<)-]    //move C to E and G (end on C)
+(CE>>)[(EC<<)+(CE>>)-]              //move E to C (end on E)
+(ED<)+(DC<)+                        //increment C; set D to 1 (end on C)
+(CB<)[                  //while B 
+    -(BC>)-             //decrement B and C (end on C)
+    [(CA<<)+(AE>>>>)+(EC<<)-]   //move C to A and E (end on C)
+    (CD>)[(DC<)+(CD>)-]         //move D to C (end on D)
+    (DE>)[(EC<<)[(CD>)+(DC<)-](CE>>)[-]] //if E; move C to D (end on E)
+    (EC<<)[-]                   //set C to 0 (end on C)
+    (CA<<)[(AC>>)+(CA<<)-]      //move A to C (end on A)
+    (AB>)                       //go to B 
+]
+(BC>)[-](CE>>)+++++             //set C to 0; E to 5 (end on E)
+(ED<)[(DE>)[-](EF>)[(FC<<<)+(CF>>>)-](FD<<)[-]]         //if D; set E to 0; move F to C (end on D)
+(DE>)[(EG>>)+(GE<<)-]           //move E to G (end on E)
+(EF>)[(FG>)+(GF<)-]             //move F to G (end on F)
+(FG>)[(GA<<<<<<)<[<]<[<]<+>>[>]>[>](AG>>>>>>)-]   //move G to second empty cell after second stack (end on G)
+(GA<<<<<<)<[<]<[<]<[>+<-]>[>]>[>]          //shift addition to stack into place (end on A)
+<           //go to elem_0 
+]
+
+<[[>+<-]<]>>[>]         //shift stack to the right (end on A)
+(AC>>)
+[           //if C 
+[(CA<<)<[<]<+>>[>](AC>>)-]    //move C to second empty cell (end on C)
+(CA<<)<[<]<[>+<-]>[>]   //shift addition (end on A)
+(AC>>)]
+
+(CA<<)<[          //while stack is not empty 
+[>(AH>>>>>>>)+(HA<<<<<<<)<-]    //move elem_0 to H (end on elem_0)
+>(AH>>>>>>>)                    //go to H 
+//go to work cell of index *H; set to 0 
+    >>>>>>[-]<<<<<<[>>>>>>+<<<<<<-]>>>>>>
+    [[>>>>>>+<<<<<<-]+>>>>>>--]
+<<[<<<<[<<<<<<](HG<)+(GE<<)+(EH>>>)>>>>>>[>>>>>>]<<-]   //move X_cell to G and E (end on X)
+<<<<[<<<<<<](HG<)[(GH>)>>>>>>[>>>>>>]<<+<<<<[<<<<<<](HG<)-] //move G to X_cell (end on G)
+(GH>)>>>>>>[>>>>>>]<<<[<<<[<<<<<<](HG<)+(GD<<<)+(DH>>>>)>>>>>>[>>>>>>]<<<-] //move W_cell to G and D (end on W)
+<<<[<<<<<<](HG<)[(GH>)>>>>>>[>>>>>>]<<<+<<<[<<<<<<](HG<)-]  //move G to W_cell (end on G)
+(GH>)>>>>>>[>>>>>>]<<<<[<<[<<<<<<](HG<)+(GC<<<<)+(CH>>>>>)>>>>>>[>>>>>>]<<<<-]  //move V_cell to G and C (end on V)
+<<[<<<<<<](HG<)[(GH>)>>>>>>[>>>>>>]<<<<+<<[<<<<<<](HG<)-]   //move G to V_cell (end on G)
+(GH>)>>>>>>[>>>>>>]<<<<<[<[<<<<<<](HG<)+(GB<<<<<)+(BH>>>>>>)>>>>>>[>>>>>>]<<<<<-]   //move U_cell to G and B (end on U)
+<[<<<<<<](HG<)[(GH>)>>>>>>[>>>>>>]<<<<<+<[<<<<<<](HG<)-]    //move G to U_cell (end on G)
+(GH>)>>>>>>[>>>>>>]+[<<<<<<](HG<)                           //set work cell to 1 (end on G)
+(GA<<<<<<)<             //go to elem_0
+<[[>+<-]<]>>[>]<        //shift stack (end on elem_0)
+]
+
+
+>(AB>)+(BC>)+(CD>)+(DE>)+   //increment each digit (end on E)
+(EA<<<<)+                   //set A to 1 
+[                       //while A 
+[-](AB>)-[(BA<)<+>(AB>)-]   //decrement B; move B to elem_0 (end on B)
+(BA<)+<[>-(AB>)+(BA<)<[>(AB>)+(BA<)<-]]    //set A to 1; if elem_0; move elem_0 to B; increment B; set A to 0 (end on elem_0)
+>[[<+>-](AC>>)[[<+>-]>]<<[<]]   //if A; move A to elem_0; shift digits to the left (end on A)
+<[>+<-]>                //move elem_0 to A 
+]
+<++++++++[>++++++<-]>-  //set A to 47 (end on A)
+[>[+>]<[<]>-]           //move A to every digit (end on A)
+(AB>)[.[-]>[[<+>-]>]<<[<]>]    //print and remove every digit (end on B)
+
+++++++++++.[-]      //print new line 
+
+(BH>>>>>>),]

@@ -1,0 +1,42 @@
+-[[>+<-]>-]-[[>+<-]>-]          //go to cell A (?510)
+(AL<)+                          //set first element of left_stack to 1
+(LA>)++++[(AB>)+++++(BA<)-]     //set B to 20 (end on A)
+
+(AB>)[              //while B 
+-                   //decrement B 
+(BL<<)[             //while left stack is not empty (L)
+    [(LD>>>>)+(DR>>>>>)[>]>+<<[<](HL<<<<<<<<)-] //move L to D and second empty space in Right_stack (end on L)
+    (LR>>>>>>>>>)[>]>[<+>-]<[<]     //move addition to right_stack into first empty space (end on H)
+    (HE<<<)++++++[(ED<)++++++++(DE>)-]  //add 48 to D (end on E)
+    (ED<).[-]               //output D; set D to 0 (end on D)
+    (DL<<<<)<[[>+<-]<]>>[>]     //shift left_stack to the right (end on A)
+    (AL<)
+]
+
+(LR>>>>>>>>>)[(RD<<<<<)+(DR>>>>>)-]     //move R to D (end on R)
+(RC<<<<<<)+         //set C to 1 
+(CR>>>>>>)>[[<+>-]>]<<[<]               //shift right_stack left (end on H)
+(HR>)[                                  //while right_stack is not empty (R)
+    (RD<<<<<)[(DE>)+(EF>)+(FD<<)-]      //move D to E and F (end on D)
+    (DF>>)[(FD<<)+(DF>>)-]              //move F to D (end on F)
+    (FR>>>)[(RF<<<)+(FG>)+(GR>>)-]      //move R to G and H (end on R)
+    (RE<<<<)[(EF>)-(FE<)-]              //bring E to 0; F down same amount (end on E)
+    (EF>)[                              //if *F 
+        (FC<<<)[(CL<<<)[<]<+>>[>](AC>>)-]   //move C to second empty space in left_stack (end on C)
+        (CD>)[(DL<<<<)[<]<<+>>>[>](AD>>>)-] //move D to third empty space in left_stack (end on D)
+        (DL<<<<)[<]<[[>+<-]<]>>[>]      //shift additions to left_stack into place (end on A)
+        (AF>>>>>)[-]                    //set F to 0 (end on F)
+    ]
+    (FC<<<)+                            //increment C (end on C)
+    (CD>)[-]                            //set D to 0 
+    (DG>>>)[(GD<<<)+(DG>>>)-]           //move G to D (end on G)
+    (GR>>)>[[<+>-]>]<<[<](HR>)          //shift right_stack to the left (end on R)
+]
+(RC<<<<<<)[(CL<<<)[<]<+>>[>](AC>>)-]    //move C to second empty cell in left_stack (end on C)
+(CD>)[(DL<<<<)[<]<<+>>>[>](AD>>>)-]     //move D to third empty cell in left_stack (end on D)
+(DL<<<<)[<]<[[>+<-]<]>>[>]              //shift additions to left_stack into place (end on A)
+++++++++++.[-]                          //print new line 
+(AB>)
+]
+
+

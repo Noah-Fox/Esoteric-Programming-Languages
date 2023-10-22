@@ -1,0 +1,36 @@
+[>>+<<-]>>++
+    [>+<[>>>+<<<-]>>>-]
+    <<[<<<]>>>>>>
+    [<---------->>>>]
+    <<<[<<<]
+    >>>[>>>]<<<<<+                        //set X_cell of last element to 1
+    [                                       //while X_cell of current element is 1
+    [-]>+                                   //set X to 0; increment Y (end on Y)
+    >[-]                                //set Z to 0
+    <[<+>>+<-]              //move Y to X and Z (end on Y)
+    <
+    //bit_flip X (end on X)
+        >+<[>-<[-]]>[<+>-]<
+    >>[<+>-]+                   //move Z to Y; set Z to 1 (end on Z)
+    <<[>----------<[-]<<<+>>>]  //if *X; set Y to ~10; set X to 0; set prev_X to 1 (end on X)
+    <<<                 //go to prev_X 
+    ]
+    >>[<<<]             //go to C 
+    >>[-]>>>[-]>[<<<] 
+    >>>>>>>>>       //go to Z_cell of elem_0
+    [
+    <++++++++++     //convert to num mode (end on Y)
+    [<+>-]          //move Y to X (end on Y)
+    >[-]<<          //set Z to 0 (end on X)
+    [>>+<<[>+<-]]   //if digits is not 0; set Z to 1; move X to Y (end on X)
+    >>[<<+>>-]     //move Z to X (end on Z)
+    +++++[<++++++++++>-]<--     //convert to char mode (end on Y)
+    >+>>>           //set Z to 1; go to next cell 
+    ]
+    <<<[<<<]        //go to C 
+    >>>[<<[>.>>[-]+<<<[-]]>>>>>]    //print all elements that are not leading zeros (end on landing_cell_2)
+    //if landing_cell_0 is 1; then a number was printed; if not; '0' needs to be printed 
+    <<>+<[>-<[-]]>[<+>-]<       //bit_flip landing_cell_0 
+    [++++[>++++++++++<-]>--.[-]<] //if landing_cell_0; print '0'
+    <[<<<]                      //return to C 
+    >>>>>>>>>[+++++++++[<------>-]<++>+>>>]<<<[<<<]
