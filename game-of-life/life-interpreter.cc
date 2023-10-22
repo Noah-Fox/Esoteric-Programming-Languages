@@ -1,5 +1,26 @@
 /*
  * Simulator for John Conway's Game of Life
+ *
+ * Inputs the grid from a text file, taking 'O' as dead cells and 'X' as live cells. Outputs the result after a given number
+ * of steps back to the same file.
+ *
+ * Possible arguments:
+ *  - inputFile: the name of the file to read from and write to
+ *  - gridWidth: the total width of the grid
+ *  - gridHeight: the total height of the grid 
+ *      - gridWidth and gridHeight can be greater than the width or height of the grid given in the input file. Extra space
+ * will be filled with dead cells
+ *  - inputX: the x position of the top left cell of the input grid within the whole grid
+ *  - inputY: the y position of the top left cell of the input grid within the whole grid
+ *  - generations: the number of steps to take before outputting
+ *
+ * Valid calls:
+ *  ./life inputFile             
+ *                      Runs a single generation on the input grid, adding no extra size
+ *  ./life inputFile generations
+ *                      Runs given number of generations on the input grid
+ *  ./life inputFile gridWidth gridHeight inputX inputY generations
+ *   
 */
 
 #include <iostream>
@@ -17,6 +38,7 @@ int main(int argc, char const *argv[]){
     int inputY = 0;
     int generations = 1;
     bool sizeGiven = false;
+    int inputWidth = 0;
     vector< vector<bool> > grid;
     
     //parse arguments
@@ -45,18 +67,24 @@ int main(int argc, char const *argv[]){
     ifstream inFile;
     inFile.open(inputFileName);
 
+    //input initial grid
     if (inFile.fail()){
         cout << "ERROR: " << inputFileName << " failed to open\n";
         return 0;
     }
 
-    //input initial grid
     string inputLine;
     int lineCount = 0;
     while (!inFile.eof()){
-        lineCount ++;
         inputLine = "";
         inFile >> inputLine;
+
+        if (inputWidth == 0){
+            inputWidth = inputLine.length();
+        }
+        else if (inputLine.length() != inputWidth){
+            break;
+        }
 
         if (sizeGiven){
             for (int i = 0; i < inputLine.length(); i ++){
@@ -71,8 +99,9 @@ int main(int argc, char const *argv[]){
             for (int i = 0; i < inputLine.length(); i ++){
                 grid[i].push_back(inputLine[i] == 'X');
             }
-            gridHeight = lineCount;
+            gridHeight = lineCount+1;
         }
+        lineCount ++;
     }
 
     inFile.close();
@@ -108,8 +137,8 @@ int main(int argc, char const *argv[]){
     ofstream outFile;
     outFile.open(inputFileName);
 
-    for (int i = 0; i < gridHeight; i ++){
-        for (int x = 0; x < gridWidth; x ++){
+    for (int i = inputY; i < inputY+lineCount; i ++){
+        for (int x = inputX; x < inputX+inputWidth; x ++){
             if (grid[x][i]){
                 outFile << "X";
             }
