@@ -1,1 +1,1 @@
-# Esoteric-Programming-Languages
+# Esoteric Programming Languages
