@@ -1,5 +1,9 @@
-aaa1+++01>r:?!;1-r :@@:n+ aov
-         ^                  <
+aaa1+++01>r:?!;1-r:@@:n+aov
+         ^                <
 
+ff1++01v
+@@:n+ao>r:?!;1-r:
 
 Print the first 31 values of the fibonacci sequence
+
+First script is an easy-to-understand script, second is optimized for code golf
