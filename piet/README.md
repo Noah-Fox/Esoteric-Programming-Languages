@@ -75,3 +75,11 @@ fibonacci
         - add three to stack            |b (a+b) n 3
         - add one to stack              |b (a+b) n 3 1
         - roll                          |n b (a+b)
+
+## Resources
+
+[Online editor and interpreter](https://piet.bubbler.one/)
+
+[Piet Wiki](https://esolangs.org/wiki/Piet)
+
+[Piet Website](https://www.dangermouse.net/esoteric/piet.html)
