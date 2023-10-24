@@ -1,0 +1,5 @@
+aaa1+++01>r:?!;1-r :@@:n+ aov
+         ^                  <
+
+
+Print the first 31 values of the fibonacci sequence
