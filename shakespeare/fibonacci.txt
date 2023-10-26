@@ -1,0 +1,83 @@
+A Most Familiar Sequence.
+
+Romeo, a young man boldly in love with Juliet.
+Juliet, a young woman who disinterested in her relationship.
+Ophelia, an occasional lover of Hamlet.
+Hamlet, a prince with a dead father.
+Macbeth, an extravagent scottish lord.
+
+	Act I: Exchanges between lovers.
+
+	Scene I: Romeo and Juliet.
+
+[Enter Romeo and Juliet]
+
+Juliet: You are as fine as a tree. Listen to your heart.
+
+[Exeunt]
+
+	Scene II: Hamlet and Ophelia.
+
+[Enter Hamlet and Ophelia]
+
+Ophelia: You are as bold as a horse.
+
+[Exeunt]
+
+	Scene III: Hamlet's soliliquy.
+
+[Enter Macbeth and Hamlet]
+
+Hamlet: You are a brave good fine charming bold hero.
+
+[Exeunt]
+
+	Act II: The action.
+
+	Scene I: The lovers make an appearance.
+
+[Enter Romeo and Juliet]
+
+	Scene II: A scandalous affair.
+
+[Exit Romeo]
+
+[Enter Hamlet]
+
+Hamlet: You are as lovely as Ophelia. Open your heart!
+
+[Exit Hamlet]
+
+[Enter Ophelia]
+
+Ophelia: You are as bold as the sum of yourself and Hamlet.
+
+Juliet: You are as lovely as Hamlet.
+
+[Exit Juliet]
+
+[Enter Hamlet]
+
+Ophelia: You are as beautiful as Juliet.
+
+[Exeunt]
+
+	Scene III: A shocking revelation.
+
+[Enter Macbeth and Romeo]
+
+Romeo: Speak your mind!
+
+Macbeth: you are as large as the difference between yourself and a hero.
+
+[Exeunt]
+
+	Scene IV: A confrontation.
+
+[Enter Romeo and Juliet]
+
+Romeo: Am I better than the sum of a hero and a coward?
+
+Juliet: If so, let us proceed to scene II.
+
+[Exeunt]
